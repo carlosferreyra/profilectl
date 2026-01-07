@@ -98,7 +98,8 @@ everywhere.
 
 ## Usage
 
-The dotfiles CLI provides a unified interface for all operations. You can run it directly if installed, or use `uvx` to run it without installation:
+The dotfiles CLI provides a unified interface for all operations. You can run it directly if
+installed, or use `uvx` to run it without installation:
 
 ### Running the CLI
 
