@@ -17,7 +17,7 @@
   description = "Cross-platform dotfiles automation with Python"
   keywords = ["automation", "configuration", "dotfiles"]
   license = { text = "MIT" }
-  name = "dotfiles"
+  name = "dfiles"
   readme = "README.md"
   requires-python = ">=3.12"
   version = "0.1.0"
