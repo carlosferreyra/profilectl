@@ -1,11 +1,9 @@
 """Configuration and system information."""
 
-from pathlib import Path
-
 import typer
 
 from dotfiles.config_manager import ConfigManager
-from dotfiles.helpers import get_home_dir, get_platform
+from dotfiles.helpers import find_repo_root, get_home_dir, get_platform
 
 
 def config() -> None:
@@ -19,7 +17,7 @@ def config() -> None:
     - Manifest path
     - Available configurations
     """
-    repo_root = Path(__file__).parent.parent.parent.parent.resolve()
+    repo_root = find_repo_root()
     config_mgr = ConfigManager(repo_root)
     manifest = config_mgr.load_manifest()
 

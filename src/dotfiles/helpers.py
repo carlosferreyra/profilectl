@@ -28,6 +28,44 @@ def get_home_dir() -> Path:
     return Path.home()
 
 
+def find_repo_root() -> Path:
+    """
+    Find the dotfiles repository root directory.
+
+    Searches in this order:
+    1. DOTFILES_HOME environment variable (if set)
+    2. Current working directory (if running from repo)
+    3. ~/.dotfiles (standard installation location)
+    4. Development/dotfiles folder
+
+    Returns:
+        Path to the dotfiles repository root
+    """
+    import os
+
+    home = get_home_dir()
+
+    # Check environment variable first
+    if "DOTFILES_HOME" in os.environ:
+        return Path(os.environ["DOTFILES_HOME"]).resolve()
+
+    # Check current working directory
+    if (Path.cwd() / "manifests" / "links.json").exists():
+        return Path.cwd()
+
+    # Check standard location
+    if (home / ".dotfiles" / "manifests" / "links.json").exists():
+        return home / ".dotfiles"
+
+    # Check Development/dotfiles
+    dev_location = home / "Development" / "dotfiles"
+    if (dev_location / "manifests" / "links.json").exists():
+        return dev_location
+
+    # Fallback to package location
+    return Path(__file__).parent.parent.parent.resolve()
+
+
 def command_exists(cmd: str) -> bool:
     """Check if a command exists in the system PATH."""
     try:

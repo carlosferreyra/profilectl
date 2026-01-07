@@ -1,12 +1,15 @@
 """Install and configure dotfiles."""
 
-import sys
-from pathlib import Path
-
 import typer
 
 from dotfiles.config_manager import ConfigManager
-from dotfiles.helpers import command_exists, get_home_dir, get_platform, run_command
+from dotfiles.helpers import (
+    command_exists,
+    find_repo_root,
+    get_home_dir,
+    get_platform,
+    run_command,
+)
 from dotfiles.package_manager import PackageManager
 
 
@@ -87,8 +90,8 @@ def install(
     3. Create symlinks for all configuration files
     4. Backup existing configurations before overwriting
     """
-    # Get repo root (parent of dotfiles package)
-    repo_root = Path(__file__).parent.parent.parent.parent.resolve()
+    # Get repo root
+    repo_root = find_repo_root()
 
     typer.echo("\n🚀 Dotfiles Installation")
     typer.echo(f"   Platform: {get_platform()}")
@@ -173,7 +176,9 @@ def install(
     typer.echo(f"   ✓ Successful: {successful}, Failed: {failed}\n")
 
     if failed > 0 and not force:
-        typer.echo("   ⚠ Some symlinks failed. Use --force to overwrite existing files.\n")
+        typer.echo(
+            "   ⚠ Some symlinks failed. Use --force to overwrite existing files.\n"
+        )
 
     # Step 6: Success summary
     typer.echo("✅ Installation Complete!")

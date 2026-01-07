@@ -1,10 +1,9 @@
 """Verify symlink status."""
 
-from pathlib import Path
-
 import typer
 
 from dotfiles.config_manager import ConfigManager
+from dotfiles.helpers import find_repo_root
 
 
 def verify() -> None:
@@ -15,7 +14,7 @@ def verify() -> None:
     - Number of valid symlinks
     - Any broken or missing symlinks
     """
-    repo_root = Path(__file__).parent.parent.parent.parent.resolve()
+    repo_root = find_repo_root()
     config_mgr = ConfigManager(repo_root)
 
     typer.echo("\n🔍 Verifying Symlinks\n")
