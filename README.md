@@ -61,8 +61,10 @@ everywhere.
    ```bash
    git clone https://github.com/carlosferreyra/dotfiles.git ~/.dotfiles
    cd ~/.dotfiles
-   uv run install.py
+   dotfiles install
    ```
+
+   Or use `uv run dotfiles install` if you prefer to run locally before installation.
 
 #### Windows (PowerShell)
 
@@ -91,35 +93,49 @@ everywhere.
    ```powershell
    git clone https://github.com/carlosferreyra/dotfiles.git $env:USERPROFILE\.dotfiles
    cd $env:USERPROFILE\.dotfiles
-   uv run install.py
+   dotfiles install
    ```
 
 ## Usage
+
+The dotfiles CLI provides a unified interface for all operations:
+
+```bash
+dotfiles [COMMAND] [OPTIONS]
+```
+
+### Available Commands
+
+- **`install`** - Install and configure dotfiles for your system
+- **`update`** - Update dotfiles, system packages, and development tools
+- **`verify`** - Verify all dotfiles symlinks are correctly set up
+- **`config`** - Show current dotfiles configuration and system information
+- **`backup`** - Manage dotfiles backups (list/restore)
 
 ### Installation
 
 Full installation with all system packages:
 
 ```bash
-uv run install.py
+dotfiles install
 ```
 
 Skip package manager updates (faster):
 
 ```bash
-uv run install.py --no-packages
+dotfiles install --no-packages
 ```
 
 Overwrite existing configurations:
 
 ```bash
-uv run install.py --force
+dotfiles install --force
 ```
 
 Preview changes without executing:
 
 ```bash
-uv run install.py --dry-run
+dotfiles install --dry-run
 ```
 
 ### Updates
@@ -127,19 +143,49 @@ uv run install.py --dry-run
 Update everything (system packages + tools):
 
 ```bash
-uv run update.py
+dotfiles update
 ```
 
 Update only development tools (skip system packages):
 
 ```bash
-uv run update.py --tools-only
+dotfiles update --tools-only
 ```
 
 Preview updates without executing:
 
 ```bash
-uv run update.py --dry-run
+dotfiles update --dry-run
+```
+
+### Verification
+
+Check if all symlinks are correctly set up:
+
+```bash
+dotfiles verify
+```
+
+### Configuration
+
+View current system configuration and managed files:
+
+```bash
+dotfiles config
+```
+
+### Backups
+
+List all existing backups:
+
+```bash
+dotfiles backup --list
+```
+
+Restore from backups (interactive):
+
+```bash
+dotfiles backup --restore
 ```
 
 ## Configuration

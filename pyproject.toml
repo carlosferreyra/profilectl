@@ -13,6 +13,7 @@
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
   ]
+  dependencies = ["rich>=13.0.0", "typer>=0.9.0"]
   description = "Cross-platform dotfiles automation with Python"
   keywords = ["automation", "configuration", "dotfiles"]
   license = { text = "MIT" }
@@ -27,8 +28,7 @@
   Repository = "https://github.com/carlosferreyra/dotfiles.git"
 
 [project.scripts]
-  dotfiles-install = "dotfiles.cli:main_install"
-  dotfiles-update  = "dotfiles.cli:main_update"
+  dotfiles = "dotfiles.cli:run"
 
 [tool.uv]
   managed          = true
