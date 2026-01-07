@@ -98,10 +98,20 @@ everywhere.
 
 ## Usage
 
-The dotfiles CLI provides a unified interface for all operations:
+The dotfiles CLI provides a unified interface for all operations. You can run it directly if installed, or use `uvx` to run it without installation:
+
+### Running the CLI
+
+**Local installation (after `dotfiles install`):**
 
 ```bash
 dotfiles [COMMAND] [OPTIONS]
+```
+
+**From GitHub with uvx (no installation needed):**
+
+```bash
+uvx git+https://github.com/carlosferreyra/dotfiles -- [COMMAND] [OPTIONS]
 ```
 
 ### Available Commands
@@ -112,7 +122,9 @@ dotfiles [COMMAND] [OPTIONS]
 - **`config`** - Show current dotfiles configuration and system information
 - **`backup`** - Manage dotfiles backups (list/restore)
 
-### Installation
+### Examples
+
+#### Installation
 
 Full installation with all system packages:
 
@@ -138,7 +150,7 @@ Preview changes without executing:
 dotfiles install --dry-run
 ```
 
-### Updates
+#### Updates
 
 Update everything (system packages + tools):
 
@@ -158,7 +170,7 @@ Preview updates without executing:
 dotfiles update --dry-run
 ```
 
-### Verification
+#### Verification
 
 Check if all symlinks are correctly set up:
 
@@ -166,7 +178,7 @@ Check if all symlinks are correctly set up:
 dotfiles verify
 ```
 
-### Configuration
+#### Configuration
 
 View current system configuration and managed files:
 
@@ -174,7 +186,7 @@ View current system configuration and managed files:
 dotfiles config
 ```
 
-### Backups
+#### Backups
 
 List all existing backups:
 
