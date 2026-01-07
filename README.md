@@ -72,7 +72,7 @@ everywhere.
    winget install Git.Git
    ```
 
-   Or download from: https://git-scm.com/download/win
+   Or download from: <https://git-scm.com/download/win>
 
 2. **Install UV**:
 
