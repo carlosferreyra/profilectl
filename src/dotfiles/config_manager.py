@@ -11,9 +11,8 @@ This module handles:
 import json
 import sys
 from pathlib import Path
-from typing import dict
 
-from .helpers import get_home_dir, safe_symlink, ensure_dir
+from .helpers import get_home_dir, safe_symlink
 
 
 class ConfigManager:
@@ -84,6 +83,7 @@ class ConfigManager:
         try:
             if config_path.is_dir():
                 import shutil
+
                 shutil.copytree(config_path, backup_path)
             else:
                 config_path.read_text()  # Verify readable

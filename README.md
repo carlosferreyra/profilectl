@@ -2,7 +2,8 @@
 
 Cross-platform dotfiles automation for macOS and Windows, powered by Python.
 
-Manage your development environment configurations with a single repository. Install once, sync everywhere.
+Manage your development environment configurations with a single repository. Install once, sync
+everywhere.
 
 ## Features
 
@@ -17,11 +18,13 @@ Manage your development environment configurations with a single repository. Ins
 ## Supported Tools
 
 ### Package Managers
+
 - **macOS**: Homebrew (`brew`)
 - **Windows**: Windows Package Manager (`winget`)
 - **Linux**: APT (`apt-get`)
 
 ### Development Tools
+
 - **Python**: `uv` (package manager), Python 3.10/3.11/3.12
 - **Rust**: `rustup`, `cargo`
 - **JavaScript/TypeScript**: `bun`, `nvm` (Node version manager)
@@ -29,6 +32,7 @@ Manage your development environment configurations with a single repository. Ins
 - **C/C++**: LLVM, clang, gcc
 
 ### Shell & Terminal
+
 - **Shell**: `zsh`, `bash`
 - **Prompt**: `starship`
 - **Multiplexer**: `tmux`
@@ -41,11 +45,13 @@ Manage your development environment configurations with a single repository. Ins
 #### macOS & Linux
 
 1. **Install UV** (Python package manager):
+
    ```bash
    curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
 
 2. **Install Python 3.12**:
+
    ```bash
    uv python install 3.12
    ```
@@ -60,11 +66,13 @@ Manage your development environment configurations with a single repository. Ins
 #### Windows (PowerShell)
 
 1. **Install UV**:
+
    ```powershell
    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
    ```
 
 2. **Install Python 3.12**:
+
    ```powershell
    uv python install 3.12
    ```
@@ -81,21 +89,25 @@ Manage your development environment configurations with a single repository. Ins
 ### Installation
 
 Full installation with all system packages:
+
 ```bash
 uv run install.py
 ```
 
 Skip package manager updates (faster):
+
 ```bash
 uv run install.py --no-packages
 ```
 
 Overwrite existing configurations:
+
 ```bash
 uv run install.py --force
 ```
 
 Preview changes without executing:
+
 ```bash
 uv run install.py --dry-run
 ```
@@ -103,16 +115,19 @@ uv run install.py --dry-run
 ### Updates
 
 Update everything (system packages + tools):
+
 ```bash
 uv run update.py
 ```
 
 Update only development tools (skip system packages):
+
 ```bash
 uv run update.py --tools-only
 ```
 
 Preview updates without executing:
+
 ```bash
 uv run update.py --dry-run
 ```
@@ -161,9 +176,9 @@ The `manifests/links.json` defines which files get symlinked:
 
 ```json
 {
-  "config/zsh/.zshrc": "~/.zshrc",
-  "config/zsh/.zshenv": "~/.zshenv",
-  "config/git/.gitconfig": "~/.gitconfig"
+	"config/zsh/.zshrc": "~/.zshrc",
+	"config/zsh/.zshenv": "~/.zshenv",
+	"config/git/.gitconfig": "~/.gitconfig"
 }
 ```
 
@@ -204,6 +219,7 @@ Some configurations are OS-specific. The scripts handle this automatically:
 ### Adding New Tools
 
 **macOS**:
+
 ```bash
 # Edit Brewfile
 code manifests/Brewfile
@@ -213,14 +229,11 @@ uv run install.py
 ```
 
 **Windows**:
+
 ```json
 // Edit manifests/packages.json
 {
-  "packages": [
-    "Git.Git",
-    "JetBrains.Toolbox",
-    "golang.Go"
-  ]
+	"packages": ["Git.Git", "JetBrains.Toolbox", "golang.Go"]
 }
 ```
 
@@ -236,6 +249,7 @@ uv run install.py
 ## What Gets Installed
 
 ### System Packages (Brewfile on macOS)
+
 - Git, Zsh, Starship, Tmux
 - Python 3.10/3.11/3.12, UV, Pipx
 - Rustup, Go, LLVM, Make, CMake
@@ -243,6 +257,7 @@ uv run install.py
 - Optional: Docker, PostgreSQL
 
 ### Development Tools
+
 - UV self-updates and tool upgrades
 - Rust/Cargo tool updates
 - Bun upgrades
@@ -251,6 +266,7 @@ uv run install.py
 ## Troubleshooting
 
 ### UV not found after installation
+
 ```bash
 # Ensure UV is in PATH
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -258,6 +274,7 @@ source ~/.zshrc
 ```
 
 ### Symlink creation failed
+
 ```bash
 # Check existing config
 ls -la ~/.zshrc
@@ -271,22 +288,26 @@ uv run install.py
 ```
 
 ### Homebrew not found (macOS)
+
 ```bash
 # Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
 ### winget not found (Windows)
+
 Windows Package Manager comes with Windows 11+. For Windows 10, install from:
 https://github.com/microsoft/winget-cli
 
 ## Backup & Recovery
 
 The installer automatically backs up existing configurations with `.backup` extension:
+
 - `~/.zshrc.backup` (if `.zshrc` already exists)
 - `~/.gitconfig.backup` (if `.gitconfig` already exists)
 
 To restore:
+
 ```bash
 mv ~/.zshrc.backup ~/.zshrc
 ```
