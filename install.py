@@ -70,17 +70,20 @@ def bootstrap_uv() -> bool:
 
 
 def get_python_install_command() -> list[str]:
-    """Get the command to install Python 3.12+."""
-    platform = get_platform()
+    """
+    Get the command to install Python 3.12+ as a system version.
 
-    if platform == "macos":
-        return ["uv", "python", "install", "3.12"]
-    elif platform == "windows":
-        return ["uv", "python", "install", "3.12"]
-    elif platform == "linux":
-        return ["uv", "python", "install", "3.12"]
-
-    return []
+    Uses --python-preference only-system to ensure Python is installed
+    as a system Python rather than a uv-managed version.
+    """
+    return [
+        "uv",
+        "python",
+        "install",
+        "--python-preference",
+        "only-system",
+        "3.12",
+    ]
 
 
 def main() -> int:
@@ -136,8 +139,23 @@ Examples:
             return 1
     print("   ✓ UV is available\n")
 
+    # Step 1.5: Ensure Git is available
+    print("1️⃣ .5️⃣  Checking Git installation...")
+    if not command_exists("git"):
+        platform = get_platform()
+        if platform == "windows":
+            print("   ✗ Git not found in PATH")
+            print("   → Windows requires manual Git installation")
+            print("   → Download from: https://git-scm.com/download/win")
+            print("   → Or install via: winget install Git.Git\n")
+            return 1
+        else:
+            print("   ⚠ Git not found (may be needed for full functionality)")
+    else:
+        print("   ✓ Git is available\n")
+
     # Step 2: Ensure Python 3.12+ is available
-    print("2️⃣  Ensuring Python 3.12+...")
+    print("2️⃣  Ensuring Python 3.12+ (as system version)...")
     from dotfiles.helpers import run_command
 
     try:

@@ -50,13 +50,14 @@ everywhere.
    curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
 
-2. **Install Python 3.12**:
+2. **Install Python 3.12 (system version)**:
 
    ```bash
-   uv python install 3.12
+   uv python install --python-preference only-system 3.12
    ```
 
 3. **Clone and install dotfiles**:
+
    ```bash
    git clone https://github.com/carlosferreyra/dotfiles.git ~/.dotfiles
    cd ~/.dotfiles
@@ -65,19 +66,28 @@ everywhere.
 
 #### Windows (PowerShell)
 
-1. **Install UV**:
+1. **Install Git** (required on Windows):
+
+   ```powershell
+   winget install Git.Git
+   ```
+
+   Or download from: https://git-scm.com/download/win
+
+2. **Install UV**:
 
    ```powershell
    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
    ```
 
-2. **Install Python 3.12**:
+3. **Install Python 3.12 (system version)**:
 
    ```powershell
-   uv python install 3.12
+   uv python install --python-preference only-system 3.12
    ```
 
-3. **Clone and install dotfiles**:
+4. **Clone and install dotfiles**:
+
    ```powershell
    git clone https://github.com/carlosferreyra/dotfiles.git $env:USERPROFILE\.dotfiles
    cd $env:USERPROFILE\.dotfiles
@@ -297,7 +307,7 @@ uv run install.py
 ### winget not found (Windows)
 
 Windows Package Manager comes with Windows 11+. For Windows 10, install from:
-https://github.com/microsoft/winget-cli
+<https://github.com/microsoft/winget-cli>
 
 ## Backup & Recovery
 
@@ -353,10 +363,10 @@ MIT License - see LICENSE file for details
 
 ## Resources
 
-- **UV Documentation**: https://docs.astral.sh/uv/
-- **Homebrew**: https://brew.sh
-- **Starship Prompt**: https://starship.rs
-- **Dotfiles Community**: https://dotfiles.github.io
+- **UV Documentation**: <https://docs.astral.sh/uv/>
+- **Homebrew**: <https://brew.sh>
+- **Starship Prompt**: <https://starship.rs>
+- **Dotfiles Community**: <https://dotfiles.github.io>
 
 ---
 
