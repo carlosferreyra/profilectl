@@ -1,0 +1,24 @@
+[package]
+name        = "dfiles"
+description = "A modern, profile-based dotfiles manager — successor to chezmoi"
+edition.workspace    = true
+version.workspace    = true
+authors.workspace    = true
+license.workspace    = true
+repository.workspace = true
+homepage.workspace   = true
+rust-version.workspace = true
+
+[[bin]]
+name = "dfiles"
+path = "src/bin/dfiles.rs"
+
+[dependencies]
+anyhow.workspace             = true
+clap.workspace               = true
+dfiles-cli.workspace         = true
+dfiles-config.workspace      = true
+dfiles-interactive.workspace = true
+dfiles-types.workspace       = true
+tracing.workspace            = true
+tracing-subscriber.workspace = true

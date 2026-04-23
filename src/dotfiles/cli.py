@@ -7,6 +7,7 @@ import typer
 from dotfiles.commands.backup import backup
 from dotfiles.commands.config import config
 from dotfiles.commands.install import install
+from dotfiles.commands.scan import scan
 from dotfiles.commands.update import update
 from dotfiles.commands.verify import verify
 
@@ -21,6 +22,7 @@ app.command()(update)
 app.command()(verify)
 app.command()(config)
 app.command()(backup)
+app.command()(scan)
 
 
 @app.callback(invoke_without_command=True)

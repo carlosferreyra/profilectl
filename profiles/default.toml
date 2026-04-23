@@ -1,0 +1,87 @@
+name        = "default"
+description = "Base profile — shared by all machines"
+
+# ── Dotfile symlinks ───────────────────────────────────────────────────────────
+# source: path relative to the repo root
+# target: absolute destination (~  is expanded at runtime)
+
+[[links]]
+source = "config/zsh/.zshrc"
+target = "~/.zshrc"
+
+[[links]]
+source = "config/zsh/.zshenv"
+target = "~/.zshenv"
+
+[[links]]
+source = "config/zsh/.zprofile"
+target = "~/.zprofile"
+
+[[links]]
+source = "config/zsh/config/00_environment.zsh"
+target = "~/.zsh/00_environment.zsh"
+
+[[links]]
+source = "config/zsh/config/01_plugins.zsh"
+target = "~/.zsh/01_plugins.zsh"
+
+[[links]]
+source = "config/zsh/config/02_options.zsh"
+target = "~/.zsh/02_options.zsh"
+
+[[links]]
+source = "config/zsh/config/03_aliases.zsh"
+target = "~/.zsh/03_aliases.zsh"
+
+[[links]]
+source = "config/zsh/config/04_functions.zsh"
+target = "~/.zsh/04_functions.zsh"
+
+[[links]]
+source = "config/zsh/config/05_completions.zsh"
+target = "~/.zsh/05_completions.zsh"
+
+[[links]]
+source = "config/zsh/config/06_init.zsh"
+target = "~/.zsh/06_init.zsh"
+
+[[links]]
+source = "config/git/.gitconfig"
+target = "~/.gitconfig"
+
+[[links]]
+source = "config/git/.gitignore_global"
+target = "~/.gitignore_global"
+
+[[links]]
+source = "config/shell/starship.toml"
+target = "~/.config/starship.toml"
+
+# ── Tools ─────────────────────────────────────────────────────────────────────
+# Declare tools you want on every machine.
+# `dfiles install` will install any that are missing.
+# `dfiles diff`    will show what's installed but not declared (and vice versa).
+
+[tools]
+brew = [
+    "git-lfs",
+    "lazygit",
+    "neovim",
+    "zsh-autocomplete",
+    "zsh-autosuggestions",
+    "zsh-syntax-highlighting",
+]
+
+cargo = [
+    "bat",
+    "eza",
+    "fd-find",
+    "git-cliff",
+    "zoxide",
+]
+
+uv = []
+
+npm = []
+
+bun = []
