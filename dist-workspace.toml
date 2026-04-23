@@ -1,0 +1,17 @@
+[workspace]
+members = ["crates/dfiles"]
+
+[dist]
+cargo-dist-version = "0.31.0"
+ci                 = ["github"]
+installers         = ["shell", "powershell"]
+targets            = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-pc-windows-msvc",
+]
+pr-run-mode        = "upload"
+
+# Install script will be available at:
+# curl --proto '=https' --tlsv1.2 -LsSf https://github.com/carlosferreyra/dotfiles/releases/latest/download/dfiles-installer.sh | sh

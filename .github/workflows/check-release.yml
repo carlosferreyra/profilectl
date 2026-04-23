@@ -1,0 +1,19 @@
+# TODO: re-enable once a caching strategy for `cargo install cargo-dist` is in place.
+# See: dist-workspace.toml and release.toml for the intended release pipeline.
+name: Check release
+
+on:
+  pull_request:
+    paths:
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "crates/*/Cargo.toml"
+      - "dist-workspace.toml"
+      - "release.toml"
+
+jobs:
+  dist-plan:
+    name: cargo dist plan (skipped)
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "cargo-dist plan check is disabled pending cache strategy"

@@ -1,0 +1,8 @@
+# sccache speeds up local builds — install with: cargo install sccache
+# CI uses Swatinem/rust-cache instead, so the wrapper must not be set there.
+# Uncomment locally if you have sccache installed:
+# [build]
+# rustc-wrapper = "sccache"
+
+[alias]
+nt = "nextest run"
