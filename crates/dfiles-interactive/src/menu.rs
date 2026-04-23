@@ -18,15 +18,15 @@ enum Action {
 impl std::fmt::Display for Action {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let label = match self {
-            Self::Sync    => "  sync     — apply symlinks + install tools",
+            Self::Sync => "  sync     — apply symlinks + install tools",
             Self::Install => "  install  — install profile tools only",
-            Self::Link    => "  link     — create dotfile symlinks",
-            Self::Unlink  => "  unlink   — remove dotfile symlinks",
-            Self::Scan    => "  scan     — snapshot installed tools to tools.md",
-            Self::Diff    => "  diff     — compare profile tools vs installed",
-            Self::Check   => "  check    — verify symlinks and tools",
-            Self::Status  => "  status   — show current profile and machine state",
-            Self::Exit    => "  exit",
+            Self::Link => "  link     — create dotfile symlinks",
+            Self::Unlink => "  unlink   — remove dotfile symlinks",
+            Self::Scan => "  scan     — snapshot installed tools to tools.md",
+            Self::Diff => "  diff     — compare profile tools vs installed",
+            Self::Check => "  check    — verify symlinks and tools",
+            Self::Status => "  status   — show current profile and machine state",
+            Self::Exit => "  exit",
         };
         write!(f, "{label}")
     }

@@ -6,4 +6,6 @@ pub struct LinkArgs {
     #[arg(long)]
     pub force: bool,
 }
-pub fn run(_args: LinkArgs) -> Result<()> { todo!("dfiles link: not yet implemented") }
+pub fn run(_args: LinkArgs) -> Result<()> {
+    todo!("dfiles link: not yet implemented")
+}

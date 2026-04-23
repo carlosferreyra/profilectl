@@ -6,4 +6,6 @@ pub struct ScanArgs {
     #[arg(long, short)]
     pub path: Option<std::path::PathBuf>,
 }
-pub fn run(_args: ScanArgs) -> Result<()> { todo!("dfiles scan: not yet implemented") }
+pub fn run(_args: ScanArgs) -> Result<()> {
+    todo!("dfiles scan: not yet implemented")
+}

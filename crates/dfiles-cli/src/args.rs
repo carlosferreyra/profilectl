@@ -3,15 +3,21 @@ use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
 #[command(
-    name      = "dfiles",
+    name = "dfiles",
     version,
-    about     = "A modern, profile-based dotfiles manager",
+    about = "A modern, profile-based dotfiles manager",
     long_about = "dfiles manages your dotfiles, tools, and machine setup from a single git repo.\n\
-                  Run without arguments to enter interactive mode.",
+                  Run without arguments to enter interactive mode."
 )]
 pub struct Cli {
     /// Profile to use (defaults to \"default\").
-    #[arg(long, short, global = true, default_value = "default", env = "DFILES_PROFILE")]
+    #[arg(
+        long,
+        short,
+        global = true,
+        default_value = "default",
+        env = "DFILES_PROFILE"
+    )]
     pub profile: String,
 
     /// Path to the dotfiles repo (overrides $DFILES_HOME and ~/.dotfiles).

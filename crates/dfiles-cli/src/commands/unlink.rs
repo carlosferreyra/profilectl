@@ -6,4 +6,6 @@ pub struct UnlinkArgs {
     #[arg(long)]
     pub force: bool,
 }
-pub fn run(_args: UnlinkArgs) -> Result<()> { todo!("dfiles unlink: not yet implemented") }
+pub fn run(_args: UnlinkArgs) -> Result<()> {
+    todo!("dfiles unlink: not yet implemented")
+}
