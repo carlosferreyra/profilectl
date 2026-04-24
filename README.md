@@ -16,13 +16,13 @@ cargo install profilectl
 ### Install via shell script (macOS/Linux)
 
 ```bash
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/carlosferreyra/dotfiles/releases/latest/download/profilectl-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/carlosferreyra/profilectl/releases/latest/download/profilectl-installer.sh | sh
 ```
 
 ### Install via PowerShell (Windows)
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://github.com/carlosferreyra/dotfiles/releases/latest/download/profilectl-installer.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://github.com/carlosferreyra/profilectl/releases/latest/download/profilectl-installer.ps1 | iex"
 ```
 
 ## Usage
