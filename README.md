@@ -143,4 +143,4 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-**Made with ❤️ by Carlos Ferreyra**
+**Made with ❤️ by [Carlos Ferreyra](https://github.com/carlosferreyra)**
