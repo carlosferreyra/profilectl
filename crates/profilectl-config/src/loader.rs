@@ -3,11 +3,11 @@ use anyhow::{Context, Result};
 use std::path::{Path, PathBuf};
 
 /// Resolve the dotfiles repo root from:
-///   1. `DFILES_HOME` env var
+///   1. `PCTL_HOME` env var
 ///   2. Current working directory (if it contains `profiles/`)
 ///   3. `~/.dotfiles`
 pub fn repo_root() -> PathBuf {
-    if let Ok(home) = std::env::var("DFILES_HOME") {
+    if let Ok(home) = std::env::var("PCTL_HOME") {
         return PathBuf::from(home);
     }
 

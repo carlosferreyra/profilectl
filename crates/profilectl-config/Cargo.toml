@@ -13,6 +13,7 @@ rust-version.workspace = true
 anyhow.workspace           = true
 profilectl-types.workspace = true
 dirs.workspace             = true
+minijinja.workspace        = true
 serde.workspace            = true
 thiserror.workspace        = true
 toml.workspace             = true

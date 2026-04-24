@@ -36,6 +36,9 @@ thiserror = { version = "2" }
 # Filesystem / paths
 dirs = { version = "5" }
 
+# Templating
+minijinja = { version = "2", features = ["loader"] }
+
 # Logging / output
 tracing            = { version = "0.1" }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
