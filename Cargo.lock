@@ -478,7 +478,7 @@ dependencies = [
 
 [[package]]
 name = "profilectl"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "anyhow",
  "clap",
@@ -492,7 +492,7 @@ dependencies = [
 
 [[package]]
 name = "profilectl-cli"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "anyhow",
  "clap",
@@ -504,7 +504,7 @@ dependencies = [
 
 [[package]]
 name = "profilectl-config"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "anyhow",
  "dirs",
@@ -516,7 +516,7 @@ dependencies = [
 
 [[package]]
 name = "profilectl-interactive"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "anyhow",
  "indicatif",
@@ -527,7 +527,7 @@ dependencies = [
 
 [[package]]
 name = "profilectl-types"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "anyhow",
  "serde",
