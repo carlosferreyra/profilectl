@@ -1,0 +1,24 @@
+[package]
+name           = "profilectl"
+description    = "A modern, profile-based dotfiles manager — successor to chezmoi"
+edition.workspace      = true
+version.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+homepage.workspace     = true
+rust-version.workspace = true
+
+[[bin]]
+name = "profilectl"
+path = "src/bin/profilectl.rs"
+
+[dependencies]
+anyhow.workspace                 = true
+clap.workspace                   = true
+profilectl-cli.workspace         = true
+profilectl-config.workspace      = true
+profilectl-interactive.workspace = true
+profilectl-types.workspace       = true
+tracing.workspace                = true
+tracing-subscriber.workspace     = true

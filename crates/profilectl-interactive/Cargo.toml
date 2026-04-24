@@ -1,0 +1,17 @@
+[package]
+name           = "profilectl-interactive"
+description    = "Interactive TUI mode for profilectl using inquire and indicatif"
+edition.workspace      = true
+version.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+homepage.workspace     = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow.workspace              = true
+profilectl-config.workspace   = true
+profilectl-types.workspace    = true
+indicatif.workspace           = true
+inquire.workspace             = true

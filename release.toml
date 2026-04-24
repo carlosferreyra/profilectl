@@ -1,5 +1,5 @@
 # cargo-release configuration
-# Usage: cargo release patch|minor|major
+# Usage: cargo release patch|minor|major [--execute]
 
 # Run git-cliff before tagging so CHANGELOG.md is always up to date.
 pre-release-hook = ["git-cliff", "--output", "CHANGELOG.md", "--tag", "{{version}}"]
@@ -10,9 +10,13 @@ pre-release-commit-message = "chore: release v{{version}}"
 # Tag format expected by git-cliff and cargo-dist.
 tag-name = "v{{version}}"
 
-# Push the tag so cargo-dist picks it up.
+# Push the tag so cargo-dist picks it up and triggers release.yml.
 push = true
-publish = true
 
-# Only release from the workspace root (crates/* are workspace members).
+# cargo-release publishes each workspace crate in dependency order.
+# --no-verify: verification is done in CI (check-release.yml dry-run), not at publish time.
+publish = true
+no-verify = true
+
+# Bump and tag all workspace crates together at the same version.
 shared-version = true
