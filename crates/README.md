@@ -1,8 +1,8 @@
 # Crates
 
-## [dfiles](./dfiles)
+## [profilectl](./profilectl)
 
-The binary entry point. Contains `bin/dfiles.rs` which parses CLI args and dispatches to either
+The binary entry point. Contains `bin/profilectl.rs` which parses CLI args and dispatches to either
 `profilectl-cli` (subcommand mode) or `profilectl-interactive` (no-args TUI mode). This crate has no library
 surface — it is purely the thin binary glue.
 
@@ -30,6 +30,6 @@ keyboard-driven interface. The `progress` module exports reusable spinner/bar he
 
 ## [profilectl-types](./profilectl-types)
 
-Shared primitives with no business logic: `Platform` enum (macos/linux/windows), `DfilesError`
+Shared primitives with no business logic: `Platform` enum (macos/linux/windows), `ProfilectlError`
 (thiserror-based), and any other types needed across multiple crates. Exists to prevent circular
 dependencies — every other crate may depend on this one, but this crate depends on nothing internal.
