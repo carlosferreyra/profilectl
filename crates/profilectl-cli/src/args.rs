@@ -16,12 +16,12 @@ pub struct Cli {
         short,
         global = true,
         default_value = "default",
-        env = "DFILES_PROFILE"
+        env = "PCTL_PROFILE"
     )]
     pub profile: String,
 
-    /// Path to the dotfiles repo (overrides $DFILES_HOME and ~/.dotfiles).
-    #[arg(long, global = true, env = "DFILES_HOME")]
+    /// Path to the dotfiles repo (overrides $PCTL_HOME and ~/.dotfiles).
+    #[arg(long, global = true, env = "PCTL_HOME")]
     pub home: Option<std::path::PathBuf>,
 
     /// Enable verbose output.
