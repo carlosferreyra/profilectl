@@ -10,9 +10,9 @@ tag-name = "v{{version}}"
 # Push the tag so cargo-dist picks it up and triggers release.yml.
 push = true
 
-# cargo-release publishes each workspace crate in dependency order.
-# --no-verify: verification is done in CI (check-release.yml dry-run), not at publish time.
-publish = true
+# Publishing is handled by CI (publish-crates.yml) via OIDC trusted publishing.
+# cargo-release only bumps versions, commits, tags, and pushes.
+publish = false
 
 # Bump and tag all workspace crates together at the same version.
 shared-version = true

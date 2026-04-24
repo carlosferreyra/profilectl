@@ -1,0 +1,28 @@
+name: Publish to crates.io
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  id-token: write # OIDC trusted publishing
+
+jobs:
+  publish:
+    name: Publish crates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Publish workspace crates
+        run: |
+          cargo publish -p profilectl-types
+          cargo publish -p profilectl-config
+          cargo publish -p profilectl-cli
+          cargo publish -p profilectl-interactive
+          cargo publish -p profilectl
