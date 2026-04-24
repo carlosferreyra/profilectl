@@ -11,9 +11,9 @@ members = [
 [workspace.package]
 authors      = ["Carlos Ferreyra <eduferreyraok@gmail.com>"]
 edition      = "2021"
-homepage     = "https://github.com/carlosferreyra/dotfiles"
+homepage     = "https://github.com/carlosferreyra/profilectl"
 license      = "MIT"
-repository   = "https://github.com/carlosferreyra/dotfiles"
+repository   = "https://github.com/carlosferreyra/profilectl"
 rust-version = "1.85"
 version      = "0.1.0"
 

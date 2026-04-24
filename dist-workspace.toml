@@ -19,4 +19,4 @@ install-path = "CARGO_HOME"
 install-updater = false
 
 # Install script will be available at:
-# curl --proto '=https' --tlsv1.2 -LsSf https://github.com/carlosferreyra/dotfiles/releases/latest/download/profilectl-installer.sh | sh
+# curl --proto '=https' --tlsv1.2 -LsSf https://github.com/carlosferreyra/profilectl/releases/latest/download/profilectl-installer.sh | sh
