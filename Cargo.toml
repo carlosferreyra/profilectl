@@ -15,7 +15,7 @@ homepage     = "https://github.com/carlosferreyra/profilectl"
 license      = "MIT"
 repository   = "https://github.com/carlosferreyra/profilectl"
 rust-version = "1.85"
-version      = "0.1.3"
+version      = "0.1.4"
 
 [workspace.dependencies]
 # CLI
@@ -41,10 +41,10 @@ tracing            = { version = "0.1" }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 # Internal crates — version required alongside path for crates.io publishing
-profilectl-cli         = { path = "crates/profilectl-cli",         version = "0.1.3" }
-profilectl-config      = { path = "crates/profilectl-config",      version = "0.1.3" }
-profilectl-interactive = { path = "crates/profilectl-interactive", version = "0.1.3" }
-profilectl-types       = { path = "crates/profilectl-types",       version = "0.1.3" }
+profilectl-cli         = { path = "crates/profilectl-cli",         version = "0.1.4" }
+profilectl-config      = { path = "crates/profilectl-config",      version = "0.1.4" }
+profilectl-interactive = { path = "crates/profilectl-interactive", version = "0.1.4" }
+profilectl-types       = { path = "crates/profilectl-types",       version = "0.1.4" }
 
 # The profile that 'dist' will build with
 [profile.dist]
