@@ -40,6 +40,7 @@ Presence = normal/edit mode.
 ### Shell config sourcing
 
 - profilectl appends a one-time bootstrap block to the user's shell config on first `link`:
+
   ```zsh
   # --- profilectl managed (do not edit) ---
   for f in ~/.config/profilectl/rendered/*.zsh; do
@@ -47,9 +48,13 @@ Presence = normal/edit mode.
   done
   # --- end profilectl ---
   ```
-- Shell config targets: macOS → `~/.zshrc`, Linux → `~/.bashrc`, Windows → `~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1`
-- Segmented configs live in `~/.config/profilectl/rendered/` — user's own shell config is untouched beyond the bootstrap block
-- Static files (no `.j2` extension) → **symlink** from `rendered/` → repo source (edits in repo are instant)
+
+- Shell config targets: macOS → `~/.zshrc`, Linux → `~/.bashrc`, Windows →
+  `~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1`
+- Segmented configs live in `~/.config/profilectl/rendered/` — user's own shell config is untouched
+  beyond the bootstrap block
+- Static files (no `.j2` extension) → **symlink** from `rendered/` → repo source (edits in repo are
+  instant)
 - Templated files (`.j2` extension) → **rendered copy** in `rendered/` (re-rendered on `sync`)
 
 ### Templating
