@@ -75,8 +75,23 @@ class PackageMetadata:
 
         data = tomllib.loads(cargo_path.read_text())["package"]
 
+        # Resolve workspace-inherited fields from the root Cargo.toml
+        workspace_path = cargo_path.parent.parent.parent / "Cargo.toml"
+        workspace: dict = {}
+        if workspace_path.exists():
+            workspace = tomllib.loads(workspace_path.read_text()).get("workspace", {}).get("package", {})
+
+        def resolve(field: str, fallback: str = "") -> str:
+            val = data.get(field, fallback)
+            if isinstance(val, dict) and val.get("workspace"):
+                return workspace.get(field, fallback)
+            return val or fallback
+
         parsed_authors: list[Author] = []
-        for raw in data.get("authors", []):
+        raw_authors = data.get("authors", workspace.get("authors", []))
+        if isinstance(raw_authors, dict) and raw_authors.get("workspace"):
+            raw_authors = workspace.get("authors", [])
+        for raw in raw_authors:
             match raw.split("<"):
                 case [name, email_raw]:
                     parsed_authors.append(Author(name.strip(), email_raw.removesuffix(">").strip()))
@@ -85,10 +100,10 @@ class PackageMetadata:
 
         return cls(
             name=data["name"],
-            version=data["version"],
-            description=data.get("description", "Rust CLI wrapper"),
-            repository=data.get("repository", ""),
-            license_id=data.get("license", "MIT"),
+            version=resolve("version"),
+            description=resolve("description", "Rust CLI wrapper"),
+            repository=resolve("repository"),
+            license_id=resolve("license", "MIT"),
             authors=parsed_authors,
         )
 
