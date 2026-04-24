@@ -40,11 +40,11 @@ dirs = { version = "5" }
 tracing            = { version = "0.1" }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
-# Internal crates
-profilectl-cli         = { path = "crates/profilectl-cli" }
-profilectl-config      = { path = "crates/profilectl-config" }
-profilectl-interactive = { path = "crates/profilectl-interactive" }
-profilectl-types       = { path = "crates/profilectl-types" }
+# Internal crates — version required alongside path for crates.io publishing
+profilectl-cli         = { path = "crates/profilectl-cli",         version = "0.1.0" }
+profilectl-config      = { path = "crates/profilectl-config",      version = "0.1.0" }
+profilectl-interactive = { path = "crates/profilectl-interactive", version = "0.1.0" }
+profilectl-types       = { path = "crates/profilectl-types",       version = "0.1.0" }
 
 # The profile that 'dist' will build with
 [profile.dist]
