@@ -1,4 +1,4 @@
-use dfiles_types::Platform;
+use profilectl_types::Platform;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

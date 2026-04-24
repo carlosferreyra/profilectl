@@ -1,6 +1,6 @@
 use anyhow::Result;
 use clap::Parser;
-use dfiles_cli::Cli;
+use profilectl_cli::Cli;
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
@@ -18,14 +18,14 @@ fn main() -> Result<()> {
 
     // Override repo root if --home was passed.
     if let Some(ref home) = cli.home {
-        std::env::set_var("DFILES_HOME", home);
+        std::env::set_var("PCTL_HOME", home);
     }
 
     match cli.command {
         // Subcommand given — run it directly, no interactive mode.
-        Some(_) => dfiles_cli::run(cli),
+        Some(_) => profilectl_cli::run(cli),
 
         // No subcommand — drop into interactive TUI.
-        None => dfiles_interactive::run_interactive(&cli.profile),
+        None => profilectl_interactive::run_interactive(&cli.profile),
     }
 }

@@ -1,7 +1,7 @@
 use indicatif::{ProgressBar, ProgressStyle};
 use std::time::Duration;
 
-/// Create a spinner with a consistent dfiles style.
+/// Create a spinner with a consistent profilectl style.
 pub fn spinner(message: &str) -> ProgressBar {
     let pb = ProgressBar::new_spinner();
     pb.set_style(

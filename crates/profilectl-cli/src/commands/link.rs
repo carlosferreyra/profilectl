@@ -7,5 +7,5 @@ pub struct LinkArgs {
     pub force: bool,
 }
 pub fn run(_args: LinkArgs) -> Result<()> {
-    todo!("dfiles link: not yet implemented")
+    todo!("profilectl link: not yet implemented")
 }

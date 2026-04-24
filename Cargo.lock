@@ -182,65 +182,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dfiles"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "dfiles-cli",
- "dfiles-config",
- "dfiles-interactive",
- "dfiles-types",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "dfiles-cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "dfiles-config",
- "dfiles-types",
- "indicatif",
- "tracing",
-]
-
-[[package]]
-name = "dfiles-config"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "dfiles-types",
- "dirs",
- "serde",
- "thiserror 2.0.18",
- "toml",
-]
-
-[[package]]
-name = "dfiles-interactive"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "dfiles-config",
- "dfiles-types",
- "indicatif",
- "inquire",
-]
-
-[[package]]
-name = "dfiles-types"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "serde",
- "thiserror 2.0.18",
- "toml",
-]
-
-[[package]]
 name = "dirs"
 version = "5.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -533,6 +474,65 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8fd00f0bb2e90d81d1044c2b32617f68fcb9fa3bb7640c23e9c748e53fb30934"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "profilectl"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "profilectl-cli",
+ "profilectl-config",
+ "profilectl-interactive",
+ "profilectl-types",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "profilectl-cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "indicatif",
+ "profilectl-config",
+ "profilectl-types",
+ "tracing",
+]
+
+[[package]]
+name = "profilectl-config"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "dirs",
+ "profilectl-types",
+ "serde",
+ "thiserror 2.0.18",
+ "toml",
+]
+
+[[package]]
+name = "profilectl-interactive"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "indicatif",
+ "inquire",
+ "profilectl-config",
+ "profilectl-types",
+]
+
+[[package]]
+name = "profilectl-types"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "serde",
+ "thiserror 2.0.18",
+ "toml",
 ]
 
 [[package]]

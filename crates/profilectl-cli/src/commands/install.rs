@@ -3,5 +3,5 @@ use clap::Args;
 #[derive(Args, Debug)]
 pub struct InstallArgs {}
 pub fn run(_args: InstallArgs) -> Result<()> {
-    todo!("dfiles install: not yet implemented")
+    todo!("profilectl install: not yet implemented")
 }

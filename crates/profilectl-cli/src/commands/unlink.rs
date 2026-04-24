@@ -7,5 +7,5 @@ pub struct UnlinkArgs {
     pub force: bool,
 }
 pub fn run(_args: UnlinkArgs) -> Result<()> {
-    todo!("dfiles unlink: not yet implemented")
+    todo!("profilectl unlink: not yet implemented")
 }

@@ -3,10 +3,10 @@ use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
 #[command(
-    name = "dfiles",
+    name = "profilectl",
     version,
     about = "A modern, profile-based dotfiles manager",
-    long_about = "dfiles manages your dotfiles, tools, and machine setup from a single git repo.\n\
+    long_about = "profilectl manages your dotfiles, tools, and machine setup from a single git repo.\n\
                   Run without arguments to enter interactive mode."
 )]
 pub struct Cli {

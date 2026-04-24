@@ -35,7 +35,7 @@ impl std::fmt::Display for Action {
 /// Entry point for full interactive mode (no subcommand given).
 pub fn run_interactive(profile: &str) -> Result<()> {
     todo!(
-        "dfiles interactive mode (profile='{profile}'): \
+        "profilectl interactive mode (profile='{profile}'): \
          inquire menu loop not yet implemented"
     )
 }
