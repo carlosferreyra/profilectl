@@ -16,7 +16,6 @@ push = true
 # cargo-release publishes each workspace crate in dependency order.
 # --no-verify: verification is done in CI (check-release.yml dry-run), not at publish time.
 publish = true
-no-verify = true
 
 # Bump and tag all workspace crates together at the same version.
 shared-version = true
