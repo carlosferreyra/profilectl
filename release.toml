@@ -10,9 +10,14 @@ pre-release-commit-message = "chore: release v{{version}}"
 # Tag format expected by git-cliff and cargo-dist.
 tag-name = "v{{version}}"
 
-# Push the tag so cargo-dist picks it up.
+# Push the tag so cargo-dist picks it up and triggers release.yml.
 push = true
-publish = true
 
-# Only release from the workspace root (crates/* are workspace members).
+# Publish all workspace crates to crates.io.
+# --no-verify mirrors the uv project: verification is done in CI dry-run,
+# not at publish time.
+publish = true
+publish-args = ["--no-verify", "--workspace"]
+
+# All crates share the same version (bumped together).
 shared-version = true
