@@ -38,30 +38,34 @@ pub struct Cli {
 
 #[derive(Subcommand, Debug)]
 pub enum Command {
-    /// Apply symlinks and install tools for a profile (link + install).
+    /// Run the first-time setup wizard and write the global config.
+    Init(commands::init::InitArgs),
+
+    /// Apply symlinks and install tools for the active profile.
     Sync(commands::sync::SyncArgs),
 
-    /// Install tools declared in the profile without touching symlinks.
-    Install(commands::install::InstallArgs),
-
-    /// Create or update dotfile symlinks for the active profile.
+    /// Create or refresh dotfile symlinks for the active profile.
     Link(commands::link::LinkArgs),
 
-    /// Remove all symlinks managed by the active profile.
+    /// Remove every symlink the active profile manages.
     Unlink(commands::unlink::UnlinkArgs),
 
-    /// Scan installed tools and write a tools.md snapshot.
+    /// Wire up shell sourcing and materialize the rendered config tree.
+    Bootstrap(commands::bootstrap::BootstrapArgs),
+
+    /// Scan installed tools and write a tools.md (or .toml) snapshot.
     Scan(commands::scan::ScanArgs),
 
-    /// Show diff between profile tools and currently installed tools.
+    /// Show drift between the active profile and the current machine.
     Diff(commands::diff::DiffArgs),
 
-    /// Verify all profile symlinks are in place and tools are installed.
+    /// Verify the active profile is fully applied (exits nonzero on drift).
     Check(commands::check::CheckArgs),
-
-    /// List available profiles.
-    Profiles(commands::profiles::ProfilesArgs),
 
     /// Show current profile and machine state.
     Status(commands::status::StatusArgs),
+
+    /// Manage profiles (list, show, switch).
+    #[command(subcommand_value_name = "ACTION")]
+    Profile(commands::profile::ProfileArgs),
 }
