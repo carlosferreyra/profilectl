@@ -7,5 +7,6 @@ pub struct UnlinkArgs {
     pub force: bool,
 }
 pub fn run(_args: UnlinkArgs) -> Result<()> {
-    todo!("profilectl unlink: not yet implemented")
+    println!("profilectl unlink: not yet implemented");
+    Ok(())
 }

@@ -3,5 +3,6 @@ use clap::Args;
 #[derive(Args, Debug)]
 pub struct SyncArgs {}
 pub fn run(_args: SyncArgs) -> Result<()> {
-    todo!("profilectl sync: not yet implemented")
+    println!("profilectl sync: not yet implemented");
+    Ok(())
 }

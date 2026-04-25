@@ -7,5 +7,6 @@ pub struct ScanArgs {
     pub path: Option<std::path::PathBuf>,
 }
 pub fn run(_args: ScanArgs) -> Result<()> {
-    todo!("profilectl scan: not yet implemented")
+    println!("profilectl scan: not yet implemented");
+    Ok(())
 }
