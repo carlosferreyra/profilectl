@@ -16,17 +16,18 @@ use std::io::{self, BufRead, Write};
 
 /// Top-level interactive menu actions.
 ///
-/// The menu mirrors the ROADMAP design: init, sync, link, diff, check, status,
-/// exit. The remaining CLI subcommands (install, unlink, scan, profiles) are
-/// still reachable via the CLI directly.
+/// The menu is the canonical TUI surface defined in `tool_workflow.md` (§3).
+/// Order is fixed and is asserted in tests so that doc and code do not drift.
+/// Destructive surface (`unlink`, `--force`, `bootstrap --remove`) is
+/// deliberately omitted from the TUI; CLI users can still reach it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Action {
     Init,
     Sync,
     Link,
-    Diff,
-    Check,
+    Bootstrap,
     Status,
+    Profiles,
     Exit,
 }
 
@@ -35,9 +36,9 @@ impl Action {
         Self::Init,
         Self::Sync,
         Self::Link,
-        Self::Diff,
-        Self::Check,
+        Self::Bootstrap,
         Self::Status,
+        Self::Profiles,
         Self::Exit,
     ];
 
@@ -46,9 +47,9 @@ impl Action {
             Self::Init => "init",
             Self::Sync => "sync",
             Self::Link => "link",
-            Self::Diff => "diff",
-            Self::Check => "check",
+            Self::Bootstrap => "bootstrap",
             Self::Status => "status",
+            Self::Profiles => "profiles",
             Self::Exit => "exit",
         }
     }
@@ -58,9 +59,9 @@ impl Action {
             Self::Init => "first-time setup wizard",
             Self::Sync => "apply symlinks + install tools",
             Self::Link => "create dotfile symlinks",
-            Self::Diff => "compare profile tools vs installed",
-            Self::Check => "verify symlinks and tools",
-            Self::Status => "show current profile and machine state",
+            Self::Bootstrap => "wire shell sourcing + rendered tree",
+            Self::Status => "show profile, drift, and verification",
+            Self::Profiles => "list, show, and switch profiles",
             Self::Exit => "leave interactive mode",
         }
     }
@@ -195,7 +196,7 @@ fn draw(frame: &mut Frame, app: &App) {
             let is_selected = index == app.selected;
             let indicator = if is_selected { "> " } else { "  " };
             let label = format!(
-                "{indicator}{:<7} — {}",
+                "{indicator}{:<10} — {}",
                 action.label(),
                 action.description()
             );
@@ -218,17 +219,61 @@ fn draw(frame: &mut Frame, app: &App) {
     frame.render_widget(footer, chunks[2]);
 }
 
+/// Run the recipe associated with a TUI action.
+///
+/// Recipes are the contract from `tool_workflow.md` §3.2: each TUI screen
+/// composes one or more CLI invocations. While the underlying CLI subcommands
+/// are still stubs, dispatching them in the documented order keeps the
+/// surface honest and makes drift between doc and code visible.
 fn dispatch(action: Action) -> Result<()> {
     match action {
         Action::Init => {
-            println!("profilectl init: not yet implemented");
-            Ok(())
+            commands::init::run(commands::init::InitArgs {
+                force: false,
+                non_interactive: false,
+                from: None,
+            })?;
+            commands::bootstrap::run(commands::bootstrap::BootstrapArgs {
+                shell: None,
+                remove: false,
+            })
         }
-        Action::Sync => commands::sync::run(commands::sync::SyncArgs {}),
-        Action::Link => commands::link::run(commands::link::LinkArgs { force: false }),
-        Action::Diff => commands::diff::run(commands::diff::DiffArgs {}),
-        Action::Check => commands::check::run(commands::check::CheckArgs {}),
-        Action::Status => commands::status::run(commands::status::StatusArgs {}),
+        Action::Sync => {
+            commands::diff::run(commands::diff::DiffArgs {
+                tools_only: false,
+                links_only: false,
+            })?;
+            commands::sync::run(commands::sync::SyncArgs {
+                tools_only: false,
+                links_only: false,
+                force: false,
+            })
+        }
+        Action::Link => {
+            commands::diff::run(commands::diff::DiffArgs {
+                tools_only: false,
+                links_only: true,
+            })?;
+            commands::link::run(commands::link::LinkArgs { force: false })
+        }
+        Action::Bootstrap => commands::bootstrap::run(commands::bootstrap::BootstrapArgs {
+            shell: None,
+            remove: false,
+        }),
+        Action::Status => {
+            commands::status::run(commands::status::StatusArgs {})?;
+            commands::check::run(commands::check::CheckArgs {
+                tools_only: false,
+                links_only: false,
+            })?;
+            commands::diff::run(commands::diff::DiffArgs {
+                tools_only: false,
+                links_only: false,
+            })
+        }
+        Action::Profiles => commands::profile::run(commands::profile::ProfileArgs {
+            command: commands::profile::ProfileCommand::List,
+        }),
         Action::Exit => Ok(()),
     }
 }
@@ -249,11 +294,19 @@ mod tests {
     use super::*;
 
     #[test]
-    fn action_list_matches_roadmap_order() {
+    fn action_list_matches_workflow_doc_order() {
         let labels: Vec<&str> = Action::ALL.iter().map(|a| a.label()).collect();
         assert_eq!(
             labels,
-            vec!["init", "sync", "link", "diff", "check", "status", "exit"],
+            vec![
+                "init",
+                "sync",
+                "link",
+                "bootstrap",
+                "status",
+                "profiles",
+                "exit"
+            ],
         );
     }
 
@@ -275,7 +328,7 @@ mod tests {
         app.prev();
         assert_eq!(app.current(), Action::Exit);
         app.prev();
-        assert_eq!(app.current(), Action::Status);
+        assert_eq!(app.current(), Action::Profiles);
     }
 
     #[test]
@@ -283,6 +336,17 @@ mod tests {
         for action in Action::ALL {
             assert!(!action.label().is_empty());
             assert!(!action.description().is_empty());
+        }
+    }
+
+    #[test]
+    fn destructive_actions_are_not_in_tui() {
+        let labels: Vec<&str> = Action::ALL.iter().map(|a| a.label()).collect();
+        for forbidden in ["unlink", "scan"] {
+            assert!(
+                !labels.contains(&forbidden),
+                "{forbidden} must not appear in the TUI top-level menu",
+            );
         }
     }
 }
