@@ -1,0 +1,10 @@
+# zsh — modern shell stack (zsh, starship, zoxide, fzf, eza).
+name        = "zsh"
+description = "modern shell stack (zsh, starship, zoxide, fzf, eza)"
+
+[tools]
+mise = ["zsh", "starship", "zoxide", "fzf", "eza"]
+
+[[links]]
+source = "config/zsh/.zshrc"
+target = "~/.zshrc"

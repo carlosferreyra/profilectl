@@ -1,0 +1,6 @@
+# rustup — full Rust toolchain plus high-leverage workflow add-ons.
+name        = "rustup"
+description = "full Rust toolchain — rustup + cargo + clippy + rustfmt, plus nextest, bacon, sccache"
+
+[tools]
+mise = ["rust", "cargo-nextest", "bacon", "sccache"]

@@ -3,12 +3,17 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Top-level profile — lives at `profiles/<name>.toml` in the dotfiles repo.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Profile {
     pub name: String,
 
     /// Optional profile to inherit from (must resolve to another profiles/*.toml).
     pub extends: Option<String>,
+
+    /// Bundle fragments to merge before `extends`/own definition.
+    /// Names refer to baked-in bundle TOML fragments (see `bundles/*.toml`).
+    #[serde(default)]
+    pub bundles: Vec<String>,
 
     /// Human-readable description of this profile's purpose.
     pub description: Option<String>,
@@ -43,22 +48,43 @@ pub struct Link {
 }
 
 /// Tool lists grouped by package manager.
+///
+/// `mise` is the cross-platform default and covers polyglot language runtimes
+/// plus most general-purpose tools. Per-OS lists are silently skipped on
+/// non-matching platforms (filter at apply time).
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ToolSet {
+    /// Cross-platform default — polyglot version & tool manager.
+    #[serde(default)]
+    pub mise: Vec<String>,
+
+    /// macOS (Homebrew, includes casks).
     #[serde(default)]
     pub brew: Vec<String>,
 
+    /// Debian / Ubuntu.
     #[serde(default)]
-    pub cargo: Vec<String>,
+    pub apt: Vec<String>,
 
+    /// Fedora / RHEL.
     #[serde(default)]
-    pub uv: Vec<String>,
+    pub dnf: Vec<String>,
 
+    /// Arch Linux.
     #[serde(default)]
-    pub npm: Vec<String>,
+    pub pacman: Vec<String>,
 
+    /// Windows (official package manager).
     #[serde(default)]
-    pub bun: Vec<String>,
+    pub winget: Vec<String>,
+
+    /// Windows (community package manager).
+    #[serde(default)]
+    pub choco: Vec<String>,
+
+    /// Windows (CLI-focused package manager).
+    #[serde(default)]
+    pub scoop: Vec<String>,
 
     /// Catch-all for future package managers without a schema change.
     #[serde(default)]
@@ -69,10 +95,13 @@ pub struct ToolSet {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum PackageManager {
+    Mise,
     Brew,
-    Cargo,
-    Uv,
-    Npm,
-    Bun,
+    Apt,
+    Dnf,
+    Pacman,
+    Winget,
+    Choco,
+    Scoop,
     Other,
 }
