@@ -90,18 +90,3 @@ pub struct ToolSet {
     #[serde(default)]
     pub other: HashMap<String, Vec<String>>,
 }
-
-/// Which package manager a tool belongs to — used by the install/scan commands.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum PackageManager {
-    Mise,
-    Brew,
-    Apt,
-    Dnf,
-    Pacman,
-    Winget,
-    Choco,
-    Scoop,
-    Other,
-}

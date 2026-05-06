@@ -1,5 +1,6 @@
 use anyhow::Result;
 use clap::Args;
+use profilectl_types::MachineInfo;
 
 #[derive(Args, Debug)]
 pub struct InitArgs {
@@ -22,6 +23,27 @@ pub struct InitArgs {
 }
 
 pub fn run(_args: InitArgs) -> Result<()> {
-    println!("profilectl init: not yet implemented");
+    let info = MachineInfo::detect();
+    print_machine_info(&info);
+
+    println!("\nprofilectl init: not yet implemented");
     Ok(())
+}
+
+/// Prints detected machine info. Always shown during `init` (first-run setup context).
+pub fn print_machine_info(info: &MachineInfo) {
+    println!("Detected system:");
+    println!("  OS:   {} ({})", info.os_name, info.platform);
+    println!("  Arch: {}", info.arch);
+
+    if info.package_managers.is_empty() {
+        println!("  Package managers: none detected");
+    } else {
+        let names: Vec<String> = info
+            .package_managers
+            .iter()
+            .map(|pm| pm.to_string())
+            .collect();
+        println!("  Package managers: {}", names.join(", "));
+    }
 }

@@ -4,4 +4,5 @@ pub mod profile;
 
 pub use global_config::GlobalConfig;
 pub use loader::load_profile;
-pub use profile::{Link, PackageManager, Profile, ToolSet};
+pub use profile::{Link, Profile, ToolSet};
+pub use profilectl_types::PackageManager;

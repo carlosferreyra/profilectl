@@ -35,7 +35,8 @@ anyhow    = { version = "1" }
 thiserror = { version = "2" }
 
 # Filesystem / paths
-dirs = { version = "5" }
+dirs  = { version = "5" }
+which = { version = "8" }
 
 # Templating
 minijinja = { version = "2", features = ["loader"] }
