@@ -1,0 +1,11 @@
+# docker — container runtime (Docker / Docker Desktop, docker-compose).
+name        = "docker"
+description = "container runtime (Docker / Docker Desktop, docker-compose)"
+
+[tools]
+mise   = ["docker-cli"]
+brew   = ["docker", "docker-compose"]
+apt    = ["docker.io", "docker-compose"]
+dnf    = ["docker", "docker-compose"]
+pacman = ["docker", "docker-compose"]
+winget = ["Docker.DockerDesktop"]

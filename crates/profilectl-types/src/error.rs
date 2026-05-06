@@ -1,7 +1,7 @@
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-pub enum DfilesError {
+pub enum ProfilectlError {
     #[error("Profile not found: {0}")]
     ProfileNotFound(String),
 

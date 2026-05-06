@@ -16,51 +16,34 @@ use std::io::{self, BufRead, Write};
 
 /// Top-level interactive menu actions.
 ///
-/// The menu mirrors the ROADMAP design: init, sync, link, diff, check, status,
-/// exit. The remaining CLI subcommands (install, unlink, scan, profiles) are
-/// still reachable via the CLI directly.
+/// Mirrors `tool_workflow.md`: the TUI is a strict subset of the CLI. Each
+/// entry composes one or more CLI invocations (the "recipe" model).
+/// CLI-only verbs (`uninstall`, `check`, `scan`) are deliberately absent.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Action {
-    Init,
-    Sync,
-    Link,
-    Diff,
-    Check,
+    Apply,
     Status,
+    Profiles,
     Exit,
 }
 
 impl Action {
-    const ALL: &'static [Action] = &[
-        Self::Init,
-        Self::Sync,
-        Self::Link,
-        Self::Diff,
-        Self::Check,
-        Self::Status,
-        Self::Exit,
-    ];
+    const ALL: &'static [Action] = &[Self::Apply, Self::Status, Self::Profiles, Self::Exit];
 
     fn label(self) -> &'static str {
         match self {
-            Self::Init => "init",
-            Self::Sync => "sync",
-            Self::Link => "link",
-            Self::Diff => "diff",
-            Self::Check => "check",
+            Self::Apply => "apply",
             Self::Status => "status",
+            Self::Profiles => "profiles",
             Self::Exit => "exit",
         }
     }
 
     fn description(self) -> &'static str {
         match self {
-            Self::Init => "first-time setup wizard",
-            Self::Sync => "apply symlinks + install tools",
-            Self::Link => "create dotfile symlinks",
-            Self::Diff => "compare profile tools vs installed",
-            Self::Check => "verify symlinks and tools",
-            Self::Status => "show current profile and machine state",
+            Self::Apply => "preview drift, then apply the active profile",
+            Self::Status => "show drift between profile and machine",
+            Self::Profiles => "list, view, switch, or publish profiles",
             Self::Exit => "leave interactive mode",
         }
     }
@@ -195,7 +178,7 @@ fn draw(frame: &mut Frame, app: &App) {
             let is_selected = index == app.selected;
             let indicator = if is_selected { "> " } else { "  " };
             let label = format!(
-                "{indicator}{:<7} — {}",
+                "{indicator}{:<8} — {}",
                 action.label(),
                 action.description()
             );
@@ -218,17 +201,32 @@ fn draw(frame: &mut Frame, app: &App) {
     frame.render_widget(footer, chunks[2]);
 }
 
+/// Dispatch a TUI selection to the underlying CLI recipe.
+///
+/// Recipes (per `tool_workflow.md` §3.2):
+/// * `Apply`    → `status` (preview)  then `apply`
+/// * `Status`   → `status`
+/// * `Profiles` → submenu (placeholder: prints not-yet-implemented)
 fn dispatch(action: Action) -> Result<()> {
     match action {
-        Action::Init => {
-            println!("profilectl init: not yet implemented");
+        Action::Apply => {
+            commands::status::run(commands::status::StatusArgs {
+                scope: commands::scope::Scope::All,
+            })?;
+            commands::apply::run(commands::apply::ApplyArgs {
+                scope: commands::scope::Scope::All,
+                pull: false,
+                force: false,
+                strict: false,
+            })
+        }
+        Action::Status => commands::status::run(commands::status::StatusArgs {
+            scope: commands::scope::Scope::All,
+        }),
+        Action::Profiles => {
+            println!("profilectl profiles submenu: not yet implemented");
             Ok(())
         }
-        Action::Sync => commands::sync::run(commands::sync::SyncArgs {}),
-        Action::Link => commands::link::run(commands::link::LinkArgs { force: false }),
-        Action::Diff => commands::diff::run(commands::diff::DiffArgs {}),
-        Action::Check => commands::check::run(commands::check::CheckArgs {}),
-        Action::Status => commands::status::run(commands::status::StatusArgs {}),
         Action::Exit => Ok(()),
     }
 }
@@ -249,24 +247,21 @@ mod tests {
     use super::*;
 
     #[test]
-    fn action_list_matches_roadmap_order() {
+    fn action_list_matches_workflow_doc_order() {
         let labels: Vec<&str> = Action::ALL.iter().map(|a| a.label()).collect();
-        assert_eq!(
-            labels,
-            vec!["init", "sync", "link", "diff", "check", "status", "exit"],
-        );
+        assert_eq!(labels, vec!["apply", "status", "profiles", "exit"]);
     }
 
     #[test]
     fn next_cycles_forward() {
         let mut app = App::new("default".to_string());
-        assert_eq!(app.current(), Action::Init);
+        assert_eq!(app.current(), Action::Apply);
         app.next();
-        assert_eq!(app.current(), Action::Sync);
+        assert_eq!(app.current(), Action::Status);
         for _ in 0..(Action::ALL.len() - 1) {
             app.next();
         }
-        assert_eq!(app.current(), Action::Init);
+        assert_eq!(app.current(), Action::Apply);
     }
 
     #[test]
@@ -275,7 +270,7 @@ mod tests {
         app.prev();
         assert_eq!(app.current(), Action::Exit);
         app.prev();
-        assert_eq!(app.current(), Action::Status);
+        assert_eq!(app.current(), Action::Profiles);
     }
 
     #[test]
@@ -283,6 +278,19 @@ mod tests {
         for action in Action::ALL {
             assert!(!action.label().is_empty());
             assert!(!action.description().is_empty());
+        }
+    }
+
+    /// Guard: destructive or CI-only verbs must never be reachable from the
+    /// main TUI menu. `publish` lives only inside the Profiles submenu.
+    #[test]
+    fn destructive_actions_are_not_in_tui() {
+        let labels: Vec<&str> = Action::ALL.iter().map(|a| a.label()).collect();
+        for forbidden in ["uninstall", "check", "scan", "publish", "init"] {
+            assert!(
+                !labels.contains(&forbidden),
+                "TUI main menu must not expose `{forbidden}`",
+            );
         }
     }
 }
