@@ -38,28 +38,38 @@ Launches a guided TUI to select a profile, preview changes, and apply them.
 ### CLI subcommands
 
 ```
-profilectl sync       Apply the active profile (links + tools)
-profilectl install    Install declared tools via the appropriate package manager
-profilectl link       Create symlinks defined in the profile
-profilectl unlink     Remove managed symlinks
-profilectl scan       Detect installed tools and compare against the profile
-profilectl diff       Show what would change if the profile were applied
-profilectl check      Verify all symlinks and tools are in the expected state
-profilectl profiles   List available profiles
-profilectl status     Show current profile and system state
+profilectl init [<repo>] [--bundles a,b,c] [--force] [--non-interactive]
+profilectl apply        [--scope tools|links|all] [--pull] [--force] [--strict]
+profilectl publish      [<url>]
+profilectl status       [--scope tools|links|all]
+profilectl check        [--scope tools|links|all]
+profilectl uninstall    [--purge]
+profilectl scan         [--output <path>]
+profilectl profile list
+profilectl profile show [<name>]
+profilectl profile use  <name>
 ```
+
+### Global flags
+
+| Flag        | Env            | Description                                          |
+|-------------|----------------|------------------------------------------------------|
+| `--profile` | `PCTL_PROFILE` | Active profile name. Defaults to `default`.          |
+| `--home`    | `PCTL_HOME`    | Path to the dotfiles repo. Defaults to `~/.dotfiles`.|
+| `--verbose` |                | Enable debug-level tracing.                          |
+| `--dry-run` |                | Show what would happen without making changes.       |
 
 ### Selecting a profile
 
 ```bash
-profilectl --profile work sync
+profilectl --profile work apply
 ```
 
 Or set the environment variable:
 
 ```bash
 export PCTL_PROFILE=work
-profilectl sync
+profilectl apply
 ```
 
 ## Profiles
@@ -68,6 +78,7 @@ Profiles live in `profiles/<name>.toml` and describe what a machine should look 
 
 ```toml
 name = "default"
+bundles = ["zsh", "git"]
 
 [[links]]
 src = "config/zsh/.zshrc"
@@ -78,15 +89,16 @@ src = "config/git/.gitconfig"
 dst = "~/.gitconfig"
 
 [tools]
-brew = ["starship", "ripgrep", "bat", "eza"]
-cargo = ["cargo-nextest"]
+mise = ["ripgrep", "bat"]
+brew = ["eza"]
 ```
 
-Profiles support inheritance via `extends`:
+Profiles support inheritance via `extends` and pre-built `bundles`:
 
 ```toml
 name = "work"
 extends = "default"
+bundles = ["docker", "go"]
 
 [[links]]
 src = "config/zsh/.zshrc.work"
@@ -97,23 +109,35 @@ brew = ["awscli", "terraform"]
 ```
 
 The `work` profile inherits all links and tools from `default`, then adds or overrides its own.
+Merge order: **bundles → extends parent → own definition**. Own values win on conflict.
+
+### Bundles
+
+Nine pre-built bundles are embedded in the binary:
+
+| Bundle   | Description                                                  |
+|----------|--------------------------------------------------------------|
+| `mise`   | Polyglot version & tool manager (replaces nvm, pyenv, asdf) |
+| `uv`     | Python tooling (uv, ruff, mypy, pytest)                      |
+| `rustup` | Full Rust toolchain + nextest, bacon, sccache                |
+| `bun`    | JavaScript / TypeScript runtime and tooling                  |
+| `go`     | Go toolchain + golangci-lint, air                            |
+| `docker` | Container runtime (Docker Desktop, docker-compose)           |
+| `zsh`    | Modern shell stack (zsh, starship, zoxide, fzf, eza)         |
+| `git`    | Git workflow upgrades (git-lfs, lazygit, delta)              |
+| `vscode` | VS Code CLI integrations                                     |
 
 ## Project Structure
 
 ```
-dotfiles/
-├── profiles/
-│   └── default.toml       # Default profile (symlinks + tools)
-├── config/
-│   ├── zsh/               # Zsh config files
-│   ├── git/               # Git config files
-│   └── shell/             # Starship prompt config
+profilectl/
+├── bundles/               # Embedded bundle TOML fragments (mise, git, zsh, …)
 ├── crates/
-│   ├── profilectl/        # Binary entry point
-│   ├── profilectl-cli/    # Clap subcommands
-│   ├── profilectl-config/ # Profile schema and loader
-│   ├── profilectl-interactive/ # Inquire TUI
-│   └── profilectl-types/  # Shared types and errors
+│   ├── profilectl/            # Binary entry point (thin glue)
+│   ├── profilectl-cli/        # Clap subcommands and dispatch
+│   ├── profilectl-config/     # Profile schema, loader, bundle resolver
+│   ├── profilectl-interactive/ # ratatui + crossterm TUI
+│   └── profilectl-types/      # Shared types (Platform, MachineInfo, ProfilectlError)
 ├── scripts/
 │   └── release_pypi.py    # PyPI thin-wrapper publish script
 └── Cargo.toml             # Workspace root
