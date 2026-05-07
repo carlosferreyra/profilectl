@@ -5,11 +5,11 @@ name: Check release
 on:
   pull_request:
     paths:
-      - "Cargo.toml"
-      - "Cargo.lock"
-      - "crates/*/Cargo.toml"
-      - "dist-workspace.toml"
-      - "release.toml"
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'crates/*/Cargo.toml'
+      - 'dist-workspace.toml'
+      - 'release.toml'
 
 jobs:
   dist-plan:

@@ -15,4 +15,5 @@ name = "xtask"
 path = "src/main.rs"
 
 [dependencies]
-anyhow.workspace = true
+anyhow.workspace  = true
+xflags.workspace  = true
