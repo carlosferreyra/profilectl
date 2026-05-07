@@ -6,6 +6,19 @@
 - ALWAYS use Conventional Commits: `feat:`, `fix:`, `chore:`, `refactor:`, `test:`, `docs:`,
   `build:`
 
+## Environment bootstrap
+
+If `cargo` is not available (e.g. ephemeral CI or claude.ai/code sessions):
+
+```sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+source "$HOME/.cargo/env"
+```
+
+The toolchain version is pinned in the repo — do not override it:
+
+- `rust-toolchain.toml` — pins the exact toolchain channel (`rustup` reads this automatically)
+
 ## Dev tasks
 
 All routine checks run through xtask:
