@@ -1,6 +1,6 @@
 [package]
 name           = "profilectl-interactive"
-description    = "Interactive TUI mode for profilectl using inquire and indicatif"
+description    = "Interactive TUI mode for profilectl, built with ratatui and crossterm"
 edition.workspace      = true
 version.workspace      = true
 authors.workspace      = true

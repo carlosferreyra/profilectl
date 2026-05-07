@@ -81,12 +81,12 @@ name = "default"
 bundles = ["zsh", "git"]
 
 [[links]]
-src = "config/zsh/.zshrc"
-dst = "~/.zshrc"
+source = "config/zsh/.zshrc"
+target = "~/.zshrc"
 
 [[links]]
-src = "config/git/.gitconfig"
-dst = "~/.gitconfig"
+source = "config/git/.gitconfig"
+target = "~/.gitconfig"
 
 [tools]
 mise = ["ripgrep", "bat"]
@@ -101,8 +101,8 @@ extends = "default"
 bundles = ["docker", "go"]
 
 [[links]]
-src = "config/zsh/.zshrc.work"
-dst = "~/.zshrc"
+source = "config/zsh/.zshrc.work"
+target = "~/.zshrc"
 
 [tools]
 brew = ["awscli", "terraform"]
@@ -131,16 +131,19 @@ Nine pre-built bundles are embedded in the binary:
 
 ```
 profilectl/
-├── bundles/               # Embedded bundle TOML fragments (mise, git, zsh, …)
+├── bundles/                    # Embedded bundle TOML fragments (mise, git, zsh, …)
+├── config/                     # Source dotfiles (zsh, git, shell) symlinked by profiles
+├── profiles/                   # Profile TOMLs (default.toml, …)
 ├── crates/
-│   ├── profilectl/            # Binary entry point (thin glue)
-│   ├── profilectl-cli/        # Clap subcommands and dispatch
-│   ├── profilectl-config/     # Profile schema, loader, bundle resolver
+│   ├── profilectl/             # Binary entry point (thin glue)
+│   ├── profilectl-cli/         # Clap subcommands and dispatch
+│   ├── profilectl-config/      # Profile schema, loader, global config
 │   ├── profilectl-interactive/ # ratatui + crossterm TUI
-│   └── profilectl-types/      # Shared types (Platform, MachineInfo, ProfilectlError)
+│   ├── profilectl-types/       # Shared types (Platform, MachineInfo, ProfilectlError)
+│   └── profilectl-xtask/       # Dev task runner (cargo xtask check|build|test)
 ├── scripts/
-│   └── release_pypi.py    # PyPI thin-wrapper publish script
-└── Cargo.toml             # Workspace root
+│   └── release_pypi.py         # PyPI thin-wrapper publish script
+└── Cargo.toml                  # Workspace root
 ```
 
 See [crates/README.md](crates/README.md) for a description of each crate.
@@ -158,8 +161,10 @@ Releases are fully automated:
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch from `main`
+2. Create a feature branch from `main` (humans: descriptive name; agents: `claude/<short-description>`)
 3. Open a pull request — CI runs `cargo xtask check` and `cargo xtask test`
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) for the full workflow.
 
 ## License
 
