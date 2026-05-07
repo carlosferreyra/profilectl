@@ -1,0 +1,7 @@
+# Pinned toolchain — rustup reads this automatically when run from the repo.
+# CI matches via dtolnay/rust-toolchain@stable; MSRV is also set via
+# `workspace.package.rust-version` in Cargo.toml (currently 1.85).
+[toolchain]
+channel    = "stable"
+components = ["rustfmt", "clippy"]
+profile    = "minimal"

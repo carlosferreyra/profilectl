@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to dfiles are documented here.
+All notable changes to profilectl are documented here.
 
 ## [0.1.2] — 2026-04-24
 

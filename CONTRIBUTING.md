@@ -8,18 +8,22 @@ on AI-assisted contributions.
 ## Project structure
 
 ```text
+bundles/                   # baked-in bundle TOML fragments (mise, git, zsh, …)
+config/                    # source dotfiles symlinked by profiles
+profiles/                  # profile TOMLs (default.toml, …)
 crates/
-  profilectl/              # core library (business logic, config, profile resolution)
-  profilectl-cli/          # binary entry point, argument parsing
-  profilectl-config/       # config file types and parsing
-  profilectl-interactive/  # TUI and interactive prompts
-  profilectl-types/        # shared types across crates
+  profilectl/              # binary entry point — thin glue, no library surface
+  profilectl-cli/          # clap subcommands and dispatch
+  profilectl-config/       # profile schema, loader, bundle resolver, global config
+  profilectl-interactive/  # ratatui + crossterm TUI
+  profilectl-types/        # shared types (Platform, MachineInfo, ProfilectlError)
   profilectl-xtask/        # dev task runner (check, build, test) — not published
-tests/                     # integration tests (test the binary end-to-end)
+scripts/                   # release tooling (release_pypi.py, …)
 ```
 
 Unit tests live inline in each crate (`#[cfg(test)]` modules at the bottom of the relevant file).
-Integration tests that exercise the compiled binary or cross-crate behavior go in `tests/`.
+Integration tests that exercise the compiled binary or cross-crate behavior go in a top-level
+`tests/` directory (added per crate as the suite grows).
 
 To visualize the crate dependency graph, install
 [cargo-depgraph](https://github.com/jplatte/cargo-depgraph) and graphviz, then run:
@@ -31,12 +35,16 @@ cargo depgraph --dedup-transitive-deps --workspace-only | dot -Tpng > graph.png
 ## Setup
 
 [Rust](https://rustup.rs/) (and a C compiler) are required to build profilectl.
+The toolchain channel is pinned in `rust-toolchain.toml` — `rustup` reads it automatically.
 
 Invoke your development build with:
 
 ```sh
-cargo run -p profilectl-cli -- <args>
+cargo run -p profilectl -- <args>
 ```
+
+(`profilectl` is the binary crate; `profilectl-cli` is a library that defines the clap surface
+and is consumed by both the binary and the TUI.)
 
 ## Branching and PRs
 
