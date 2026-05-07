@@ -52,12 +52,12 @@ profilectl profile use  <name>
 
 ### Global flags
 
-| Flag        | Env            | Description                                          |
-|-------------|----------------|------------------------------------------------------|
-| `--profile` | `PCTL_PROFILE` | Active profile name. Defaults to `default`.          |
-| `--home`    | `PCTL_HOME`    | Path to the dotfiles repo. Defaults to `~/.dotfiles`.|
-| `--verbose` |                | Enable debug-level tracing.                          |
-| `--dry-run` |                | Show what would happen without making changes.       |
+| Flag        | Env            | Description                                           |
+| ----------- | -------------- | ----------------------------------------------------- |
+| `--profile` | `PCTL_PROFILE` | Active profile name. Defaults to `default`.           |
+| `--home`    | `PCTL_HOME`    | Path to the dotfiles repo. Defaults to `~/.dotfiles`. |
+| `--verbose` |                | Enable debug-level tracing.                           |
+| `--dry-run` |                | Show what would happen without making changes.        |
 
 ### Selecting a profile
 
@@ -115,17 +115,17 @@ Merge order: **bundles → extends parent → own definition**. Own values win o
 
 Nine pre-built bundles are embedded in the binary:
 
-| Bundle   | Description                                                  |
-|----------|--------------------------------------------------------------|
+| Bundle   | Description                                                 |
+| -------- | ----------------------------------------------------------- |
 | `mise`   | Polyglot version & tool manager (replaces nvm, pyenv, asdf) |
-| `uv`     | Python tooling (uv, ruff, mypy, pytest)                      |
-| `rustup` | Full Rust toolchain + nextest, bacon, sccache                |
-| `bun`    | JavaScript / TypeScript runtime and tooling                  |
-| `go`     | Go toolchain + golangci-lint, air                            |
-| `docker` | Container runtime (Docker Desktop, docker-compose)           |
-| `zsh`    | Modern shell stack (zsh, starship, zoxide, fzf, eza)         |
-| `git`    | Git workflow upgrades (git-lfs, lazygit, delta)              |
-| `vscode` | VS Code CLI integrations                                     |
+| `uv`     | Python tooling (uv, ruff, mypy, pytest)                     |
+| `rustup` | Full Rust toolchain + nextest, bacon, sccache               |
+| `bun`    | JavaScript / TypeScript runtime and tooling                 |
+| `go`     | Go toolchain + golangci-lint, air                           |
+| `docker` | Container runtime (Docker Desktop, docker-compose)          |
+| `zsh`    | Modern shell stack (zsh, starship, zoxide, fzf, eza)        |
+| `git`    | Git workflow upgrades (git-lfs, lazygit, delta)             |
+| `vscode` | VS Code CLI integrations                                    |
 
 ## Project Structure
 
@@ -159,7 +159,7 @@ Releases are fully automated:
 
 1. Fork the repository
 2. Create a feature branch from `main`
-3. Open a pull request — CI runs `cargo fmt`, `cargo clippy`, and `cargo test`
+3. Open a pull request — CI runs `cargo xtask check` and `cargo xtask test`
 
 ## License
 
