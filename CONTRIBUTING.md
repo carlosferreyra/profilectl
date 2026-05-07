@@ -14,6 +14,7 @@ crates/
   profilectl-config/       # config file types and parsing
   profilectl-interactive/  # TUI and interactive prompts
   profilectl-types/        # shared types across crates
+  profilectl-xtask/        # dev task runner (check, build, test) — not published
 tests/                     # integration tests (test the binary end-to-end)
 ```
 
@@ -62,14 +63,19 @@ Breaking changes: append `!` after the type (`feat!:`) and add a `BREAKING CHANG
 
 ## Before every commit
 
-Run these in order and fix any issues before committing:
+Use xtask as a gate before committing and pushing:
 
 ```sh
-cargo fmt --all
-cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
-cargo check --workspace
-cargo nextest run
+cargo xtask check   # cargo check + clippy -D warnings
+cargo xtask test    # full test suite via cargo nextest
+cargo xtask build   # build all workspace crates
 ```
+
+| Checkpoint          | When                        |
+| ------------------- | --------------------------- |
+| `cargo xtask check` | after every meaningful edit |
+| `cargo xtask test`  | before committing           |
+| `cargo xtask build` | before pushing              |
 
 For changes that must work on Windows:
 
@@ -113,7 +119,7 @@ cargo install cargo-insta --locked
 Run all tests:
 
 ```sh
-cargo nextest run
+cargo xtask test
 ```
 
 Run a specific test by name:
