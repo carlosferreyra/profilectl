@@ -1,0 +1,9 @@
+# vscode — VS Code CLI integrations.
+name        = "vscode"
+description = "VS Code CLI integrations (`code` on PATH, settings sync wiring)"
+
+[tools]
+brew   = ["visual-studio-code"]
+winget = ["Microsoft.VisualStudioCode"]
+choco  = ["vscode"]
+scoop  = ["vscode"]

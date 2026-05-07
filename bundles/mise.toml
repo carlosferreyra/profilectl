@@ -1,0 +1,13 @@
+# mise — polyglot version & tool manager (replaces nvm, pyenv, asdf).
+# Auto-checked when any other bundle is selected (provides cross-platform
+# fallback installs for everything else).
+name        = "mise"
+description = "polyglot version & tool manager (replaces nvm, pyenv, asdf)"
+
+[tools]
+brew   = ["mise"]
+apt    = ["mise"]
+dnf    = ["mise"]
+pacman = ["mise"]
+winget = ["jdx.mise"]
+scoop  = ["mise"]

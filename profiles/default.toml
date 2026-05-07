@@ -1,0 +1,69 @@
+name        = "default"
+description = "Base profile — shared by all machines"
+
+# Bundles are resolved from baked-in TOML fragments before this profile's own
+# fields are applied. Pick from: mise, uv, rustup, bun, go, docker, zsh, git,
+# vscode. Bundles fill in tool lists and links unless this profile overrides them.
+bundles = ["zsh", "git"]
+
+# ── Dotfile symlinks ───────────────────────────────────────────────────────────
+# source: path relative to the repo root
+# target: absolute destination (~ is expanded at runtime)
+
+[[links]]
+source = "config/zsh/.zshenv"
+target = "~/.zshenv"
+
+[[links]]
+source = "config/zsh/.zprofile"
+target = "~/.zprofile"
+
+[[links]]
+source = "config/zsh/config/00_environment.zsh"
+target = "~/.zsh/00_environment.zsh"
+
+[[links]]
+source = "config/zsh/config/01_plugins.zsh"
+target = "~/.zsh/01_plugins.zsh"
+
+[[links]]
+source = "config/zsh/config/02_options.zsh"
+target = "~/.zsh/02_options.zsh"
+
+[[links]]
+source = "config/zsh/config/03_aliases.zsh"
+target = "~/.zsh/03_aliases.zsh"
+
+[[links]]
+source = "config/zsh/config/04_functions.zsh"
+target = "~/.zsh/04_functions.zsh"
+
+[[links]]
+source = "config/zsh/config/05_completions.zsh"
+target = "~/.zsh/05_completions.zsh"
+
+[[links]]
+source = "config/zsh/config/06_init.zsh"
+target = "~/.zsh/06_init.zsh"
+
+[[links]]
+source = "config/shell/starship.toml"
+target = "~/.config/starship.toml"
+
+# ── Tools ─────────────────────────────────────────────────────────────────────
+# Cross-platform installs go in `mise`; per-OS lists are silently skipped on
+# non-matching platforms. `apply --scope tools` installs anything missing.
+
+[tools]
+mise = [
+    "bat",
+    "fd",
+    "ripgrep",
+    "git-cliff",
+    "neovim",
+]
+brew = [
+    "zsh-autocomplete",
+    "zsh-autosuggestions",
+    "zsh-syntax-highlighting",
+]

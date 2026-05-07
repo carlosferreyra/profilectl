@@ -1,0 +1,6 @@
+# uv — high-performance tooling for Python development.
+name        = "uv"
+description = "high-performance tooling for Python development (uv, ruff, mypy, pytest)"
+
+[tools]
+mise = ["uv", "ruff", "mypy", "pytest"]

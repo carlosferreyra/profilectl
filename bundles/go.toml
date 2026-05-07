@@ -1,0 +1,6 @@
+# go — Go toolchain and common dev helpers.
+name        = "go"
+description = "Go toolchain and common dev helpers (go, golangci-lint, air)"
+
+[tools]
+mise = ["go", "golangci-lint", "air"]

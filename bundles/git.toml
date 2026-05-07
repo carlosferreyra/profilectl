@@ -1,0 +1,14 @@
+# git — git workflow upgrades (git-lfs, lazygit, delta).
+name        = "git"
+description = "git workflow upgrades (git-lfs, lazygit, delta)"
+
+[tools]
+mise = ["git-lfs", "lazygit", "delta"]
+
+[[links]]
+source = "config/git/.gitconfig"
+target = "~/.gitconfig"
+
+[[links]]
+source = "config/git/.gitignore_global"
+target = "~/.gitignore_global"
