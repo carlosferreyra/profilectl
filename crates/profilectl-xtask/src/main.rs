@@ -25,8 +25,9 @@ fn run() -> Result<()> {
     }
 }
 
-/// `cargo check` + restrictive `cargo clippy`
+/// `cargo fmt --check` + `cargo check` + restrictive `cargo clippy`
 fn check() -> Result<()> {
+    cargo(&["fmt", "--all", "--", "--check"])?;
     cargo(&[
         "check",
         "--workspace",
