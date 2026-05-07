@@ -2,7 +2,7 @@
 # Shell Completions
 # ==============================================
 # Docker CLI completions (from current .zshrc)
-fpath=(/Users/carlosferreyra/.docker/completions $fpath)
+fpath=($HOME/.docker/completions $fpath)
 
 # Zsh function path
 fpath+=~/.zfunc

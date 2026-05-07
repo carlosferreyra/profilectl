@@ -102,8 +102,10 @@ alias refreshall='source ~/.zshrc && source ~/.bash_profile && source ~/.bashrc'
 alias ports='lsof -i -P -n | grep LISTEN'
 alias killport='kill -9 $(lsof -ti:'$1')'
 alias ps='ps aux | grep'
-alias cpu='top -o cpu'
-alias mem='top -o rsize'
+if [[ "$(uname)" == "Darwin" ]]; then
+  alias cpu='top -o cpu'
+  alias mem='top -o rsize'
+fi
 
 # ==============================================
 # Package Management
@@ -131,16 +133,18 @@ alias vsc='code -r'
 alias vscode='vsc .'
 alias vsci='code-insiders -r'
 alias vscodei='vsci .'
-alias finder='open -a Finder'
-alias openapp='open -a'
-alias dockerapp='open -a Docker'
-alias wpp='open -a "WhatsApp"'
-alias chrome='open -a "Google Chrome"'
-alias safari='open -a "Safari"'
-alias iterm='open -a "iTerm"'
-alias terminal='open -a "Terminal"'
-alias slack='open -a "Slack"'
-alias obsidian='open -a "Obsidian"'
+if [[ "$(uname)" == "Darwin" ]]; then
+  alias finder='open -a Finder'
+  alias openapp='open -a'
+  alias dockerapp='open -a Docker'
+  alias wpp='open -a "WhatsApp"'
+  alias chrome='open -a "Google Chrome"'
+  alias safari='open -a "Safari"'
+  alias iterm='open -a "iTerm"'
+  alias terminal='open -a "Terminal"'
+  alias slack='open -a "Slack"'
+  alias obsidian='open -a "Obsidian"'
+fi
 
 # Editor Configuration
 alias zshrci='code-insiders -r -d ~/.zshrc'
@@ -169,7 +173,7 @@ alias bunstart='bun install && bun run start'  # Quick bun project setup
 
 # Quick System Operations
 alias cleands='find . -type f -name ".DS_Store" -delete'  # Remove .DS_Store files
-alias flushdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'  # Flush DNS cache
+if [[ "$(uname)" == "Darwin" ]]; then alias flushdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'; fi  # Flush DNS cache (macOS)
 
 # Quick File Search and Replace
 alias findtext='find . -type f -exec grep -l "$1" {} \;'  # Find files containing text
@@ -180,7 +184,7 @@ alias ports='sudo lsof -iTCP -sTCP:LISTEN -P'  # Show all listening ports
 alias publicip='curl -4 icanhazip.com'  # Show public IP address
 
 # Quick System Info
-alias sysinfo='system_profiler SPHardwareDataType SPSoftwareDataType'  # Show system info
+if [[ "$(uname)" == "Darwin" ]]; then alias sysinfo='system_profiler SPHardwareDataType SPSoftwareDataType'; fi  # Show system info (macOS)
 
 # Auto CD Toggle
 alias ccd='autocd-toggle'
@@ -190,12 +194,14 @@ alias pyhttp='python3 -m http.server'
 alias servethis='python3 -m http.server 8000'
 
 # Miscellaneous
-alias here='pwd | pbcopy'
+if [[ "$(uname)" == "Darwin" ]]; then alias here='pwd | pbcopy'; fi
 alias ff='find . -name'
 alias gg='grep -r'
 alias hh='tldr'
 
 # Terminal Management
-alias qshell='if [ "$TERM_PROGRAM" = "Apple_Terminal" ]; then killall Terminal; else exit 0; fi;'
-alias quit='qshell'
-alias q='qshell'
+if [[ "$(uname)" == "Darwin" ]]; then
+  alias qshell='if [ "$TERM_PROGRAM" = "Apple_Terminal" ]; then killall Terminal; else exit 0; fi;'
+  alias quit='qshell'
+  alias q='qshell'
+fi

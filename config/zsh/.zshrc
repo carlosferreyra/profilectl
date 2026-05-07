@@ -1,15 +1,15 @@
 # ==============================================
-# Carlos Ferreyra's ZSH Configuration
+# ZSH Configuration
 # Modular setup - loads configuration from ~/.zsh/
 #
 # Sourced files:
-# - file:///Users/carlosferreyra/.zsh/00_environment.zsh
-# - file:///Users/carlosferreyra/.zsh/01_plugins.zsh
-# - file:///Users/carlosferreyra/.zsh/02_options.zsh
-# - file:///Users/carlosferreyra/.zsh/03_aliases.zsh
-# - file:///Users/carlosferreyra/.zsh/04_functions.zsh
-# - file:///Users/carlosferreyra/.zsh/05_completions.zsh
-# - file:///Users/carlosferreyra/.zsh/06_init.zsh
+# - ~/.zsh/00_environment.zsh
+# - ~/.zsh/01_plugins.zsh
+# - ~/.zsh/02_options.zsh
+# - ~/.zsh/03_aliases.zsh
+# - ~/.zsh/04_functions.zsh
+# - ~/.zsh/05_completions.zsh
+# - ~/.zsh/06_init.zsh
 # ==============================================
 
 # Source all .zsh files from the ~/.zsh directory in numerical order
@@ -19,6 +19,3 @@ if [ -d ~/.zsh ]; then
   done
   unset file
 fi
-
-# bun completions
-[ -s "/Users/carlosferreyra/.bun/_bun" ] && source "/Users/carlosferreyra/.bun/_bun"
