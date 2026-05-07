@@ -6,6 +6,7 @@ members = [
     "crates/profilectl-config",
     "crates/profilectl-interactive",
     "crates/profilectl-types",
+    "crates/profilectl-xtask",
 ]
 
 [workspace.package]

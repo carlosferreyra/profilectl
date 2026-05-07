@@ -5,4 +5,5 @@
 # rustc-wrapper = "sccache"
 
 [alias]
-nt = "nextest run"
+nt    = "nextest run"
+xtask = "run --package profilectl-xtask --"
