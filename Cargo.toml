@@ -1,0 +1,59 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/profilectl",
+    "crates/profilectl-cli",
+    "crates/profilectl-config",
+    "crates/profilectl-interactive",
+    "crates/profilectl-types",
+    "crates/profilectl-xtask",
+]
+
+[workspace.package]
+authors      = ["Carlos Ferreyra <eduferreyraok@gmail.com>"]
+edition      = "2021"
+homepage     = "https://github.com/carlosferreyra/profilectl"
+license      = "MIT"
+repository   = "https://github.com/carlosferreyra/profilectl"
+rust-version = "1.85"
+version      = "0.1.5"
+
+[workspace.dependencies]
+# CLI
+clap = { version = "4.5", features = ["derive", "env"] }
+
+# TUI / interactive
+crossterm = { version = "0.28" }
+indicatif = { version = "0.17" }
+ratatui   = { version = "0.29" }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+toml  = { version = "0.8" }
+
+# Error handling
+anyhow    = { version = "1" }
+thiserror = { version = "2" }
+xflags    = { version = "0.3" }
+
+# Filesystem / paths
+dirs  = { version = "5" }
+which = { version = "8" }
+
+# Templating
+minijinja = { version = "2", features = ["loader"] }
+
+# Logging / output
+tracing            = { version = "0.1" }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Internal crates — version required alongside path for crates.io publishing
+profilectl-cli         = { path = "crates/profilectl-cli",         version = "0.1.5" }
+profilectl-config      = { path = "crates/profilectl-config",      version = "0.1.5" }
+profilectl-interactive = { path = "crates/profilectl-interactive", version = "0.1.5" }
+profilectl-types       = { path = "crates/profilectl-types",       version = "0.1.5" }
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
