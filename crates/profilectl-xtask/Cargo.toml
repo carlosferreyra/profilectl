@@ -1,0 +1,19 @@
+[package]
+name           = "profilectl-xtask"
+description    = "Development task runner for the profilectl workspace"
+edition.workspace      = true
+version.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+homepage.workspace     = true
+rust-version.workspace = true
+publish        = false
+
+[[bin]]
+name = "xtask"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace  = true
+xflags.workspace  = true

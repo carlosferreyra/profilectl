@@ -1,0 +1,6 @@
+# bun — high-performance runtime & tooling for JavaScript / TypeScript.
+name        = "bun"
+description = "high-performance runtime & tooling for JavaScript / TypeScript development"
+
+[tools]
+mise = ["bun"]

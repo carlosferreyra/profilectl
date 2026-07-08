@@ -1,0 +1,17 @@
+# cargo-release configuration
+# Usage: cargo release patch|minor|major [--execute]
+
+# Commit the generated changelog and version bumps together.
+pre-release-commit-message = "chore: release v{{version}}"
+
+# Tag format expected by git-cliff and cargo-dist.
+tag-name = "v{{version}}"
+
+# Push the tag so cargo-dist picks it up and triggers release.yml.
+push = true
+
+# cargo-release publishes each workspace crate in dependency order.
+publish = true
+
+# Bump and tag all workspace crates together at the same version.
+shared-version = true
