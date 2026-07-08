@@ -1,24 +1,30 @@
 [package]
-name           = "profilectl"
-description    = "A modern, profile-based dotfiles manager — successor to chezmoi"
-edition.workspace      = true
+default-run = "profilectl"
+name        = "profilectl"
+description = "Profile-based dotfiles and developer machine automation."
 version.workspace      = true
+edition.workspace      = true
+rust-version.workspace = true
 authors.workspace      = true
 license.workspace      = true
 repository.workspace   = true
 homepage.workspace     = true
-rust-version.workspace = true
+readme.workspace       = true
+keywords.workspace     = true
+categories.workspace   = true
 
-[[bin]]
-name = "profilectl"
-path = "src/bin/profilectl.rs"
+[lints]
+workspace = true
 
 [dependencies]
-anyhow.workspace                 = true
-clap.workspace                   = true
-profilectl-cli.workspace         = true
-profilectl-config.workspace      = true
-profilectl-interactive.workspace = true
-profilectl-types.workspace       = true
-tracing.workspace                = true
-tracing-subscriber.workspace     = true
+profilectl-cli = { workspace = true }
+clap = { workspace = true }
+tracing-subscriber = { workspace = true }
+tracing                = { workspace = true }
+
+[dev-dependencies]
+insta = { workspace = true }
+
+[[test]]
+name = "integration"
+path = "tests/it/integration.rs"

@@ -1,0 +1,10 @@
+//! Integration test for the public crate.
+//!
+//! Lives in `tests/it/` so it consumes `profilectl` as an external crate —
+//! the same way a downstream user would. Uses `insta` for snapshot assertions;
+//! run `cargo insta review` to update.
+
+#[test]
+fn hello_returns_expected_string() {
+    insta::assert_snapshot!(profilectl::hello(), @"Hello from profilectl!");
+}

@@ -1,0 +1,14 @@
+[package]
+name    = "xtask"
+version = "0.0.0"
+edition = "2024"
+license = "MIT"
+publish = false
+
+[[bin]]
+name = "xtask"
+path = "src/main.rs"
+
+[dependencies]
+xflags = "0.3"
+toml   = { version = "0.8", default-features = false, features = ["parse"] }

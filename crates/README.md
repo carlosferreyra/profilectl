@@ -2,34 +2,43 @@
 
 ## [profilectl](./profilectl)
 
-The binary entry point. Contains `bin/profilectl.rs` which parses CLI args and dispatches to either
-`profilectl-cli` (subcommand mode) or `profilectl-interactive` (no-args TUI mode). This crate has no
-library surface — it is purely the thin binary glue.
+Public library and executable dispatch. This crate owns startup concerns:
+argument parsing, tracing setup, command dispatch, and exit codes.
 
 ## [profilectl-cli](./profilectl-cli)
 
-All `clap`-based subcommand definitions and their dispatch logic. Each command lives in
-`src/commands/<name>.rs` and exposes a `run(args) -> Result<()>` function. Adding a new subcommand
-means adding one file here and one variant to `args::Command` — no changes needed in other crates.
+Clap command model for the project executable. It defines the user-facing
+command surface without implementing machine effects.
 
-**Subcommands:** `init` · `apply` · `publish` · `status` · `check` · `uninstall` · `scan` · `profile list` · `profile show` · `profile use`
+## [profilectl-core](./profilectl-core)
+
+Desired-state planning engine. This crate should stay independent from concrete
+filesystem, git, shell, and package-manager effects.
 
 ## [profilectl-config](./profilectl-config)
 
-Profile schema (`Profile`, `Link`, `ToolSet`) and the loader that reads `profiles/<name>.toml`,
-resolves `extends` chains, and merges parent fields into child profiles. This is the source of truth
-for what a machine should look like.
+Profile schema and resolution. It will load TOML profiles, merge bundles and
+inheritance, and lower declarations toward core desired state.
 
-## [profilectl-interactive](./profilectl-interactive)
+## [profilectl-state](./profilectl-state)
 
-The beginner-friendly interactive TUI, powered by `ratatui` + `crossterm`. On first run (no
-`~/.config/profilectl/config.toml`) it launches a setup wizard; afterwards it shows a 4-entry
-main menu: **Apply**, **Status**, **Profiles**, **Exit**. The TUI is a strict subset of the CLI —
-every effect it produces is reachable via a CLI invocation.
+Local state inventory. It tracks managed artifacts, backups, rendered files, and
+task run metadata under the platform state directory.
 
-## [profilectl-types](./profilectl-types)
+## [profilectl-adapters](./profilectl-adapters)
 
-Shared primitives with no business logic: `Platform` enum (macos/linux/windows), `MachineInfo`
-(runtime OS/arch/package-manager detection), `PackageManager` enum, and `ProfilectlError`
-(thiserror-based). Exists to prevent circular dependencies — every other crate may depend on this
-one, but this crate depends on nothing internal.
+External system adapters. It isolates filesystem, shell, git, package manager,
+template, and command-runner effects from the planner.
+
+## [xtask](./xtask)
+
+Development automation. Not published.
+
+| Command                           | What it does                                      |
+| --------------------------------- | ------------------------------------------------- |
+| `cargo xtask check`               | Format, compile, and lint                         |
+| `cargo xtask test [filter]`       | Check and run tests                               |
+| `cargo xtask build`               | Test and build release artifacts                  |
+| `cargo xtask add <name>`          | Add a library; reserved `cli` adds the project CLI |
+| `cargo xtask coverage`            | Generate HTML coverage                            |
+| `cargo xtask publish [--execute]` | Prepare a lockstep workspace release              |

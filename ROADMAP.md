@@ -1,186 +1,94 @@
 # profilectl Roadmap
 
-## Design Decisions
+## Direction
 
-### Workspace structure
+`profilectl` is restarting from the `carlosferreyra/rust-template` scaffold. The
+current implementation can be discarded in favor of a clearer architecture:
+profile files describe desired machine state, the core engine builds an explicit
+plan, and commands either display, check, or execute that plan.
 
-Cargo workspace under `crates/` with a consistent `profilectl-` prefix, mirroring the uv repo layout:
+The first product milestone is replacing personal zsh/bootstrap scripts. Chezmoi
+competition is a later pressure: profilectl should differentiate through typed
+plans, tool installation, profiles, and an approachable TUI rather than chasing
+feature parity immediately.
 
-- `crates/profilectl` — binary entry point
-- `crates/profilectl-cli` — argument parser + command dispatch
-- `crates/profilectl-config` — profile loader, schema, bundle resolver
-- `crates/profilectl-interactive` — ratatui TUI
-- `crates/profilectl-types` — shared types (`ProfilectlError`, `Platform`)
+## Design Principles
 
-### Global config location
+- CLI is canonical; the future TUI is a guided frontend over the same engine.
+- Profile application is one-way: profile repository to machine.
+- `plan`, `status`, `check`, and `apply` all share the same planner.
+- Machine changes are typed operations, not hidden shell side effects.
+- Migration helpers generate reports or draft profiles, but never auto-apply.
+- Previous examples are retained as migration fixtures, not active source.
 
-`~/.config/profilectl/config.toml` — XDG convention. Absence = first-time setup. Presence = normal mode.
-
-### `profilectl` (no args) → TUI main menu
-
-- 4 entries: **Apply**, **Status**, **Profiles**, **Exit**
-- Backed by `ratatui` + `crossterm` (replaced `inquire`)
-- Destructive/CI-only verbs (`uninstall`, `check`, `scan`, `publish`, `init`) are CLI-only and deliberately absent from the main menu
-- TUI is a strict subset of the CLI — every effect is reachable via a CLI invocation
-
-See `tool_workflow.md` for the full TUI→CLI recipe table.
-
-### CLI surface
+## Target Command Surface
 
 ```sh
-profilectl                                          # → TUI
-
-profilectl init [<repo>] [--bundles a,b,c] [--force] [--non-interactive]
-profilectl apply         [--scope tools|links|all] [--pull] [--force] [--strict]
-profilectl publish       [<url>]
-profilectl status        [--scope tools|links|all]
-profilectl check         [--scope tools|links|all]
-profilectl uninstall     [--purge]
-profilectl scan          [--output <path>]
+profilectl
+profilectl init [repo] [--bundles a,b,c] [--force]
+profilectl plan   [--scope links|tools|shell|tasks|all]
+profilectl apply  [--scope links|tools|shell|tasks|all] [--pull] [--force] [--strict]
+profilectl status [--scope links|tools|shell|tasks|all]
+profilectl check  [--scope links|tools|shell|tasks|all]
+profilectl scan   [--output path]
 profilectl profile list
-profilectl profile show  [<name>]
-profilectl profile use   <name>
+profilectl profile show [name]
+profilectl profile use <name>
+profilectl publish [url]
+profilectl uninstall [--purge]
 ```
 
-### Profile schema
+## Architecture Roadmap
 
-```rust
-pub struct Profile {
-    pub name: String,
-    pub extends: Option<String>,   // inherit from another profile
-    pub bundles: Vec<String>,      // baked-in TOML fragments, merged first
-    pub description: Option<String>,
-    pub links: Vec<Link>,
-    pub tools: ToolSet,
-    pub env: HashMap<String, String>,
-    pub platforms: Vec<Platform>,
-}
+### Phase 1: Scaffold Reset
 
-pub struct ToolSet {
-    pub mise:   Vec<String>,    // cross-platform default
-    pub brew:   Vec<String>,    // macOS
-    pub apt:    Vec<String>,    // Debian / Ubuntu
-    pub dnf:    Vec<String>,    // Fedora / RHEL
-    pub pacman: Vec<String>,    // Arch
-    pub winget: Vec<String>,    // Windows (official)
-    pub choco:  Vec<String>,    // Windows (community)
-    pub scoop:  Vec<String>,    // Windows (CLI-focused)
-    pub other:  HashMap<String, Vec<String>>,
-}
-```
+- [x] Generate the project from `gh:carlosferreyra/rust-template`.
+- [x] Adopt template defaults: edition 2024, resolver 3, stable toolchain,
+  workspace lints, CI, `cargo xtask`, `nextest`, `deny`, and `typos`.
+- [x] Preserve old bundles, profiles, config files, and `profilectl.zsh` under
+  `fixtures/migration/current/`.
+- [x] Scaffold `profilectl-cli`, `profilectl-core`, `profilectl-config`,
+  `profilectl-state`, and `profilectl-adapters`.
+- [x] Document the greenfield direction in `ROADMAP.md` and `PLAN.md`.
 
-Merge order: **bundles → extends parent → own definition**. Own values win on conflict.
-Per-OS tool lists are filtered at apply time, never at parse time.
+### Phase 2: Read-Only Core
 
-### Bundles
+- [ ] Implement TOML profile parsing and validation in `profilectl-config`.
+- [ ] Implement bundle and inheritance resolution with deterministic precedence:
+  bundles, then inherited profiles, then local profile fields.
+- [ ] Define observed machine state and desired-state lowering.
+- [ ] Implement plan generation without mutating the machine.
+- [ ] Wire `profilectl plan`, `status`, and `check` to the planner.
 
-9 MVP fragments under `bundles/`, to be embedded in the binary via `include_str!`:
-`mise`, `uv`, `rustup`, `bun`, `go`, `docker`, `zsh`, `git`, `vscode`.
+### Phase 3: File And Shell Apply
 
-`mise` is the universal tool installer; per-OS lists handle everything else.
+- [ ] Track managed artifacts in `profilectl-state`.
+- [ ] Implement link operations with conflict reporting and explicit `--force`.
+- [ ] Add shell bootstrap management for zsh, bash, and PowerShell.
+- [ ] Add minijinja rendering for template files into profilectl's rendered
+  output directory.
+- [ ] Implement `uninstall` for managed files and shell bootstrap blocks.
 
-### Storage model
+### Phase 4: Tooling Apply
 
-- `init` always starts local (`git init` in `$PCTL_HOME`, default `~/.dotfiles`)
-- Sync is **unidirectional**: profile → machine. No reverse capture.
-- `scan` is the only escape hatch and never auto-modifies a profile.
-- `publish` is the opt-in remote setup verb. Once published, `apply --pull` is the convenience wrapper for multi-machine use.
+- [ ] Add package-manager adapters beginning with `mise` and `brew`.
+- [ ] Add Linux and Windows package manager adapters after the interface is
+  stable.
+- [ ] Make tool checks idempotent and shared by `plan`, `status`, `check`, and
+  `apply`.
+- [ ] Preserve continue-on-error by default; make `--strict` fail fast.
 
-### Shell config sourcing
+### Phase 5: Init, Scan, And Publish
 
-profilectl appends a one-time bootstrap block to the user's shell config on first `apply`:
+- [ ] Implement `init` for local repos, clone URLs, and local paths.
+- [ ] Implement `scan` as a migration report/draft generator.
+- [ ] Implement `publish` as optional git remote setup.
+- [ ] Build the first-run TUI after CLI behavior is stable.
 
-```zsh
-# --- profilectl managed (do not edit) ---
-for f in ~/.config/profilectl/rendered/*.zsh; do
-  [ -r "$f" ] && source "$f"
-done
-# --- end profilectl ---
-```
+### Phase 6: Chezmoi-Competitive Features
 
-Shell config targets: macOS → `~/.zshrc`, Linux → `~/.bashrc`, Windows → `~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1`.
-
-### Templating
-
-- Engine: `minijinja` (Jinja2 syntax), opt-in via `.j2` extension
-- Rendered output at `~/.config/profilectl/rendered/`
-- Static files → symlink from `rendered/` to repo source (edits in repo are instant)
-- Templated files → rendered copy, re-rendered on `apply`
-
-### Env vars (`PCTL_` prefix)
-
-- `PCTL_HOME` — path to dotfiles repo (default `~/.dotfiles`)
-- `PCTL_PROFILE` — active profile name (default `default`)
-
-### Idempotency
-
-Every `apply` checks each tool individually via `which::which` before invoking the package manager. Continue-on-error by default; `--strict` flips to fail-fast for CI.
-
----
-
-## Implementation Plan
-
-### Phase 1 — Foundations ✅
-
-- [x] Workspace migrated to `crates/*` layout
-- [x] `PCTL_HOME` / `PCTL_PROFILE` env vars wired through `args.rs` + `loader.rs`
-- [x] `GlobalConfig` struct — reads/writes `~/.config/profilectl/config.toml`
-- [x] `minijinja` in workspace deps
-- [x] `ProfilectlError` type in `profilectl-types`
-
-### Phase 2 — CLI/TUI surface ✅
-
-- [x] Full CLI argument parser (`clap`) matching `tool_workflow.md`
-- [x] Legacy verbs removed (`sync`, `link`, `unlink`, `install`, `diff`, `bootstrap`)
-- [x] TUI rewritten with `ratatui` + `crossterm` (4-entry main menu)
-- [x] `tool_workflow.md` added as source of truth
-- [x] 9 bundle TOML fragments under `bundles/`
-- [x] Profile schema updated (`ToolSet`, `bundles`, `extends`, `platforms`)
-- [x] All command files are stubs with clear `not yet implemented` messages
-
-### Phase 3 — `init`
-
-- [ ] Auto-detect OS, arch, package managers present on PATH
-- [ ] TUI first-run wizard: repo → bundle selection → preview → confirm → write config
-- [ ] `git init` / `git clone` into `$PCTL_HOME`
-- [ ] Write `~/.config/profilectl/config.toml`
-
-### Phase 4 — `apply`
-
-- [ ] Shell sourcing block ensure (idempotent)
-- [ ] Symlink materialization from `links`
-- [ ] Tool installation via `mise` + per-OS managers
-- [ ] `--scope tools|links|all`, `--pull`, `--force`, `--strict`
-
-### Phase 5 — `status` and `check`
-
-- [ ] Drift report: declared tools vs installed, declared links vs present
-- [ ] `status` — always exits 0, human-readable output
-- [ ] `check` — exits 1 on drift, CI gate
-
-### Phase 6 — Bundle embedding
-
-- [ ] Embed `bundles/*.toml` into the binary via `include_str!`
-- [ ] Wire `resolve_bundle()` in `profilectl-config`
-
-### Phase 7 — `profile` group
-
-- [ ] `profile list` — list available profiles in `$PCTL_HOME/profiles/`
-- [ ] `profile show [<name>]` — print resolved profile TOML
-- [ ] `profile use <name>` — write active profile to global config
-
-### Phase 8 — `publish`, `uninstall`, `scan`
-
-- [ ] `publish [<url>]` — `git remote add` + `git push -u`, optional `gh repo create`
-- [ ] `uninstall [--purge]` — remove sourcing block and managed symlinks
-- [ ] `scan [--output <path>]` — walk installed tools, write manifest (`.md` or `.toml`)
-
-### Phase 9 — Templating
-
-- [ ] `minijinja` rendering pipeline for `.j2` files
-- [ ] Rendered output at `~/.config/profilectl/rendered/`
-- [ ] Template context: `machine.*`, `profile.*`, `env.*`
-
-### Phase 10 — Remote profile registry
-
-- [ ] Fetch pre-built profiles from remote, versioned per profilectl release
+- [ ] Add controlled profile tasks with `always`, `once`, and `changed`
+  triggers.
+- [ ] Add richer diffs and review output.
+- [ ] Add secret-provider integration only after templates and state are stable.
+- [ ] Explore remote profile registries after local-first workflows are solid.

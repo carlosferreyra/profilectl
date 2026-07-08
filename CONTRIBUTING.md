@@ -1,173 +1,52 @@
-# Contributing
+# Contributing to profilectl
 
-## Use of AI
-
-See [AI_POLICY.md](https://github.com/carlosferreyra/.github/blob/main/AI_POLICY.md) for our policy
-on AI-assisted contributions.
-
-## Project structure
-
-```text
-crates/
-  profilectl/              # core library (business logic, config, profile resolution)
-  profilectl-cli/          # binary entry point, argument parsing
-  profilectl-config/       # config file types and parsing
-  profilectl-interactive/  # TUI and interactive prompts
-  profilectl-types/        # shared types across crates
-  profilectl-xtask/        # dev task runner (check, build, test) — not published
-tests/                     # integration tests (test the binary end-to-end)
-```
-
-Unit tests live inline in each crate (`#[cfg(test)]` modules at the bottom of the relevant file).
-Integration tests that exercise the compiled binary or cross-crate behavior go in `tests/`.
-
-To visualize the crate dependency graph, install
-[cargo-depgraph](https://github.com/jplatte/cargo-depgraph) and graphviz, then run:
+## Development workflow
 
 ```sh
-cargo depgraph --dedup-transitive-deps --workspace-only | dot -Tpng > graph.png
+cargo xtask check          # after every meaningful edit
+cargo xtask test           # before committing
+cargo xtask test <filter>  # scoped test run
+cargo xtask build          # before pushing
 ```
 
-## Setup
-
-[Rust](https://rustup.rs/) (and a C compiler) are required to build profilectl.
-
-Invoke your development build with:
+## Adding a new crate
 
 ```sh
-cargo run -p profilectl-cli -- <args>
+cargo xtask add <name>
 ```
 
-## Branching and PRs
+Creates `crates/profilectl-<name>/` with a `Cargo.toml` and `src/lib.rs`, inheriting all
+workspace fields, and appends a stub section to `crates/README.md`.
 
-- Work on a `claude/<short-description>` branch (agents) or a descriptive feature branch (humans)
-- Never commit directly to `main`
-- Open a Pull Request for every change, no matter how small
-- PRs must pass all CI checks before merging
+The exact name `cli` is reserved. `cargo xtask add cli` creates the unpublished
+`profilectl-cli` Clap model and adds the executable entrypoint to the public
+`profilectl` crate.
 
-## Commit messages
+## Commit conventions
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+Commits must follow [Conventional Commits](https://www.conventionalcommits.org/):
 
-```text
-feat: add profile extends resolution
-fix: handle missing config file on first run
-chore: bump clap to 4.5.4
-refactor: extract profile loader into separate module
-test: add integration test for profilectl init
-docs: update ROADMAP with shell sourcing design
-build: add cargo xwin to CI for Windows cross-check
+```
+<type>(<scope>): <description>
 ```
 
-Breaking changes: append `!` after the type (`feat!:`) and add a `BREAKING CHANGE:` footer.
+Common types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`.
+Scope is the crate name without the `profilectl-` prefix.
 
-## Before every commit
+Examples:
 
-Use xtask as a gate before committing and pushing:
+```
+feat(core): add initial processing logic
+fix(types): correct field ordering in Foo struct
+docs: update README with usage examples
+chore(deps): bump xflags to 0.4
+```
+
+## Releasing
 
 ```sh
-cargo xtask check   # cargo check + clippy -D warnings
-cargo xtask test    # full test suite via cargo nextest
-cargo xtask build   # build all workspace crates
+cargo xtask publish --execute --level patch
 ```
 
-| Checkpoint          | When                        |
-| ------------------- | --------------------------- |
-| `cargo xtask check` | after every meaningful edit |
-| `cargo xtask test`  | before committing           |
-| `cargo xtask build` | before pushing              |
-
-For changes that must work on Windows:
-
-```sh
-cargo xwin clippy --workspace --all-targets --all-features --locked -- -D warnings
-```
-
-For spell checking:
-
-```sh
-uvx typos
-```
-
-For unused dependency detection:
-
-```sh
-cargo shear
-```
-
-## Code style
-
-- Avoid `.unwrap()`, `panic!`, `unreachable!`, and `unsafe` — use `if let`, let-chains, or return
-  `Result`
-- When a clippy lint must be suppressed, prefer `#[expect()]` over `#[allow()]`
-- Use full, descriptive variable names: `profile_name` not `pn`, `config_path` not `cp`
-- Prefer top-level imports over local imports or fully qualified paths
-- No abbreviations in public API names
-
-## Testing
-
-We use [nextest](https://nexte.st/) as the test runner and [insta](https://insta.rs/) for snapshot
-testing.
-
-Install them once:
-
-```sh
-cargo install cargo-nextest --locked
-cargo install cargo-insta --locked
-```
-
-Run all tests:
-
-```sh
-cargo xtask test
-```
-
-Run a specific test by name:
-
-```sh
-cargo nextest run -E 'test(test_name)'
-```
-
-Run and accept snapshot changes:
-
-```sh
-cargo insta test --accept --test-runner nextest
-```
-
-Review snapshots interactively:
-
-```sh
-cargo insta review
-```
-
-Guidelines:
-
-- Add or update a test for every behavior change
-- Read nearby tests and copy their style before writing new ones
-- Prefer integration tests in `tests/` for user-facing behavior; unit tests for internal logic
-- Prefer specific test targets (`cargo nextest run -p profilectl-config`) over running the full
-  suite
-
-## Dependencies
-
-- Never run `cargo update` without `--precise` — update one crate at a time:
-
-  ```sh
-  cargo update --precise <crate> <version>
-  ```
-
-- Justify dependency additions in the PR description
-
-## Windows compatibility
-
-profilectl targets Windows as a future platform. When making changes that touch platform-specific
-paths, shell invocations, or file operations, verify cross-compilation passes:
-
-```sh
-# Install once
-cargo install cargo-xwin --locked
-rustup target add x86_64-pc-windows-msvc
-
-# Run on affected changes
-cargo xwin clippy --workspace --all-targets --all-features --locked -- -D warnings
-```
+This prepares the version, changelog, commit, and tag without publishing locally.
+The trusted GitHub release workflow publishes crates and release artifacts.

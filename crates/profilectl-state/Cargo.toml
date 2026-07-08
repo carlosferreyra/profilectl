@@ -1,7 +1,6 @@
 [package]
-name        = "profilectl-cli"
-description = "Command-line model for profilectl."
-publish     = false
+name        = "profilectl-state"
+description = "Local state inventory for profilectl."
 version.workspace      = true
 edition.workspace      = true
 rust-version.workspace = true
@@ -9,9 +8,9 @@ authors.workspace      = true
 license.workspace      = true
 repository.workspace   = true
 homepage.workspace     = true
+readme.workspace       = true
+keywords.workspace     = true
+categories.workspace   = true
 
 [lints]
 workspace = true
-
-[dependencies]
-clap = { workspace = true }

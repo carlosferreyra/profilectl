@@ -1,59 +1,83 @@
 [workspace]
-resolver = "2"
-members = [
-    "crates/profilectl",
-    "crates/profilectl-cli",
-    "crates/profilectl-config",
-    "crates/profilectl-interactive",
-    "crates/profilectl-types",
-    "crates/profilectl-xtask",
-]
+members  = ["crates/*"]
+resolver = "3"
 
-[workspace.package]
-authors      = ["Carlos Ferreyra <eduferreyraok@gmail.com>"]
-edition      = "2021"
-homepage     = "https://github.com/carlosferreyra/profilectl"
-license      = "MIT"
-repository   = "https://github.com/carlosferreyra/profilectl"
-rust-version = "1.85"
-version      = "0.1.5"
-
+# Shared dependencies. Pull into a crate with `dep.workspace = true`.
+# Versions are major-only ranges so Cargo always resolves the latest compatible
+# release on each `Cargo.lock` regeneration. Dependabot bumps majors when they ship.
 [workspace.dependencies]
+profilectl-adapters = { path = "crates/profilectl-adapters", version = "0.0.0" }
+profilectl-state = { path = "crates/profilectl-state", version = "0.0.0" }
+profilectl-config = { path = "crates/profilectl-config", version = "0.0.0" }
+profilectl-core = { path = "crates/profilectl-core", version = "0.0.0" }
+profilectl-cli = { path = "crates/profilectl-cli", version = "0.0.0" }
+# Inter-workspace crates: path for local dev, version for crates.io publish.
+profilectl = { path = "crates/profilectl", version = "0.0.0" }
+
+# Errors
+thiserror = "2"
+anyhow    = "1"
+
+# Observability
+tracing            = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
 # CLI
-clap = { version = "4.5", features = ["derive", "env"] }
+clap = { version = "4", features = ["derive", "env"] }
 
-# TUI / interactive
-crossterm = { version = "0.28" }
-indicatif = { version = "0.17" }
-ratatui   = { version = "0.29" }
+# Test
+insta = "1"
 
-# Serialization
-serde = { version = "1", features = ["derive"] }
-toml  = { version = "0.8" }
+# Inherited by each crate via `field.workspace = true`.
+# `rust-version` is the MSRV published to crates.io — independent from
+# `rust-toolchain.toml`, which only pins the local build toolchain.
+[workspace.package]
+version      = "0.0.0"
+edition      = "2024"
+rust-version = "1.85"
+authors      = ["Carlos Ferreyra <eduferreyraok@gmail.com>"]
+license      = "mit"
+repository   = "https://github.com/carlosferreyra/profilectl"
+homepage     = "https://github.com/carlosferreyra/profilectl"
+description  = "Profile-based dotfiles and developer machine automation."
+readme       = "README.md"
+keywords     = ["dotfiles", "profiles", "automation"]
+categories   = ["command-line-utilities", "config"]
 
-# Error handling
-anyhow    = { version = "1" }
-thiserror = { version = "2" }
-xflags    = { version = "0.3" }
+# Lint policy — inherited by all crates via `[lints] workspace = true`.
+# Mirrors uv's approach: pedantic as a baseline, with pragmatic carve-outs.
+[workspace.lints.rust]
+unsafe_code     = "warn"
+unreachable_pub = "warn"
+missing_docs    = "warn"
 
-# Filesystem / paths
-dirs  = { version = "5" }
-which = { version = "8" }
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -2 }
+# Pedantic carve-outs
+missing_errors_doc      = "allow"
+missing_panics_doc      = "allow"
+module_name_repetitions = "allow"
+must_use_candidate      = "allow"
+too_many_lines          = "allow"
+# Restriction lints
+print_stdout = "warn"
+print_stderr = "warn"
+dbg_macro    = "warn"
+get_unwrap   = "warn"
+rc_buffer    = "warn"
+rc_mutex     = "warn"
+use_self     = "warn"
 
-# Templating
-minijinja = { version = "2", features = ["loader"] }
+[profile.release]
+lto           = "fat"
+strip         = true
+codegen-units = 1
 
-# Logging / output
-tracing            = { version = "0.1" }
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-
-# Internal crates — version required alongside path for crates.io publishing
-profilectl-cli         = { path = "crates/profilectl-cli",         version = "0.1.5" }
-profilectl-config      = { path = "crates/profilectl-config",      version = "0.1.5" }
-profilectl-interactive = { path = "crates/profilectl-interactive", version = "0.1.5" }
-profilectl-types       = { path = "crates/profilectl-types",       version = "0.1.5" }
-
-# The profile that 'dist' will build with
 [profile.dist]
 inherits = "release"
-lto = "thin"
+
+[profile.fast-build]
+inherits  = "dev"
+opt-level = 1
+debug     = 0
+strip     = "debuginfo"
